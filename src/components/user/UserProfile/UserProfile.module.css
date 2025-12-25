@@ -1,0 +1,228 @@
+/* Блок: userProfile */
+.userProfile {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Элемент: userProfile__header */
+.userProfile__header {
+  text-align: center;
+}
+
+/* Элемент: userProfile__title */
+.userProfile__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Элемент: userProfile__content */
+.userProfile__content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Элемент: userProfile__avatarSection */
+.userProfile__avatarSection {
+  display: flex;
+  justify-content: center;
+}
+
+/* Элемент: userProfile__avatarWrapper */
+.userProfile__avatarWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Элемент: userProfile__avatarButton */
+.userProfile__avatarButton {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background: var(--color-background-light);
+  border: 2px solid var(--color-accent);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.userProfile__avatarButton:hover {
+  background: var(--color-accent);
+  color: #2a2a2a;
+  transform: translateY(-2px);
+}
+
+/* Элемент: userProfile__nameSection */
+.userProfile__nameSection {
+  padding: 20px;
+  background: var(--color-background-light);
+  border-radius: 12px;
+}
+
+/* Элемент: userProfile__settingsSection */
+.userProfile__settingsSection {
+  padding: 20px;
+  background: var(--color-background-light);
+  border-radius: 12px;
+}
+
+/* Элемент: userProfile__settingsTitle */
+.userProfile__settingsTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 16px 0;
+}
+
+/* Элемент: userProfile__modal */
+.userProfile__modal {
+  max-width: 500px; /* Ограничиваем максимальную ширину */
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+/* Элемент: userProfile__dangerSection */
+.userProfile__dangerSection {
+  padding: 20px;
+  background: var(--color-background-light);
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+/* Элемент: userProfile__dangerTitle */
+.userProfile__dangerTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ef4444;
+  margin: 0 0 12px 0;
+}
+
+/* Элемент: userProfile__dangerDescription */
+.userProfile__dangerDescription {
+  font-size: 14px;
+  color: var(--color-text-light);
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+/* Элемент: userProfile__deleteButton */
+.userProfile__deleteButton {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.userProfile__deleteButton:hover {
+  background: #ef4444;
+  color: var(--color-white);
+}
+
+/* Элемент: userProfile__deleteConfirm */
+.userProfile__deleteConfirm {
+  padding: 24px;
+  max-width: 500px;
+}
+
+/* Элемент: userProfile__deleteConfirmTitle */
+.userProfile__deleteConfirmTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ef4444;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+/* Элемент: userProfile__deleteConfirmText */
+.userProfile__deleteConfirmText {
+  font-size: 16px;
+  color: var(--color-text);
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+/* Элемент: userProfile__deleteConfirmList */
+.userProfile__deleteConfirmList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  padding-left: 20px;
+}
+
+.userProfile__deleteConfirmList li {
+  font-size: 14px;
+  color: var(--color-text);
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.userProfile__deleteConfirmList li::before {
+  content: "•";
+  color: #ef4444;
+  font-weight: bold;
+  position: absolute;
+  left: -20px;
+}
+
+/* Элемент: userProfile__deleteConfirmWarning */
+.userProfile__deleteConfirmWarning {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ef4444;
+  margin: 0 0 24px 0;
+  text-align: center;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+}
+
+/* Элемент: userProfile__deleteConfirmActions */
+.userProfile__deleteConfirmActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Элемент: userProfile__deleteConfirmButton */
+.userProfile__deleteConfirmButton {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: var(--color-background);
+}
+
+.userProfile__deleteConfirmButton:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .userProfile {
+    padding: 16px;
+    gap: 24px;
+  }
+
+  .userProfile__title {
+    font-size: 24px;
+  }
+
+  .userProfile__content {
+    gap: 24px;
+  }
+
+  .userProfile__nameSection,
+  .userProfile__settingsSection {
+    padding: 16px;
+  }
+}
+

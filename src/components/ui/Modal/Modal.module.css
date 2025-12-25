@@ -1,0 +1,71 @@
+/* Блок: modalOverlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  padding: 20px;
+  /* Предотвращаем layout shift */
+  contain: layout style paint;
+}
+
+/* Модификатор: modalOverlay--open */
+.modalOverlay--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Блок: modal */
+.modal {
+  background: linear-gradient(135deg, var(--color-white), var(--color-background));
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  min-width: 0; /* Предотвращает растягивание */
+  box-sizing: border-box; /* Учитывает padding в ширине */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transform: scale(0.9) translateY(20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  position: relative;
+  /* Предотвращаем flash неправильного размера при первом рендере */
+  will-change: transform, opacity;
+  /* Устанавливаем начальное состояние явно */
+  visibility: hidden;
+}
+
+.modalOverlay--open .modal {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .modal {
+    padding: 24px;
+    border-radius: 12px;
+    max-width: 90%;
+    width: 90%; /* Явно устанавливаем ширину для предотвращения растягивания */
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 95%;
+    width: 95%; /* Явно устанавливаем ширину для предотвращения растягивания */
+  }
+}
+

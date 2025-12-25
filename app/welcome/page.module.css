@@ -1,0 +1,40 @@
+/**
+ * Стили страницы Welcome
+ * БЭМ методология
+ */
+
+.main {
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--color-background), var(--color-accent));
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0 1rem;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .main {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+  }
+}
+

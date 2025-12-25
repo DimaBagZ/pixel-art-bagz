@@ -1,0 +1,91 @@
+/* Блок: avatarSelector */
+.avatarSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Элемент: avatarSelector__preview */
+.avatarSelector__preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: var(--color-background-light);
+  border-radius: 12px;
+}
+
+/* Элемент: avatarSelector__previewName */
+.avatarSelector__previewName {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Элемент: avatarSelector__grid */
+.avatarSelector__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* Элемент: avatarSelector__item */
+.avatarSelector__item {
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarSelector__item:hover {
+  border-color: var(--color-accent-light);
+  transform: scale(1.1);
+}
+
+/* Модификатор: avatarSelector__item--selected */
+.avatarSelector__item--selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-light);
+}
+
+/* Элемент: avatarSelector__actions */
+.avatarSelector__actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .avatarSelector {
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .avatarSelector__grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 12px;
+  }
+
+  .avatarSelector__preview {
+    padding: 16px;
+  }
+
+  .avatarSelector__previewName {
+    font-size: 16px;
+  }
+}
+

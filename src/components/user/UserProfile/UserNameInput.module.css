@@ -1,0 +1,71 @@
+/* Блок: userNameInput */
+.userNameInput {
+  width: 100%;
+}
+
+/* Элемент: userNameInput__display */
+.userNameInput__display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+/* Элемент: userNameInput__name */
+.userNameInput__name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Элемент: userNameInput__edit */
+.userNameInput__edit {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Элемент: userNameInput__input */
+.userNameInput__input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-background);
+  color: var(--color-text);
+  transition: border-color 0.2s ease;
+}
+
+.userNameInput__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* Элемент: userNameInput__error */
+.userNameInput__error {
+  font-size: 14px;
+  color: var(--color-error, #e74c3c);
+  margin: 0;
+}
+
+/* Элемент: userNameInput__actions */
+.userNameInput__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .userNameInput__display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .userNameInput__name {
+    font-size: 16px;
+  }
+}
+

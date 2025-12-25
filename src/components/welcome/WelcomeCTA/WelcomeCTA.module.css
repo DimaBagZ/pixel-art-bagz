@@ -1,0 +1,153 @@
+/**
+ * Стили компонента WelcomeCTA
+ * БЭМ методология
+ */
+
+.welcomeCTA {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 16px var(--color-shadow);
+  margin-bottom: 40px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.welcomeCTA__container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.welcomeCTA__title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  margin: 0 0 12px 0;
+}
+
+.welcomeCTA__subtitle {
+  font-size: 16px;
+  color: var(--color-text-light);
+  text-align: center;
+  margin: 0 0 32px 0;
+}
+
+.welcomeCTA__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.welcomeCTA__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.welcomeCTA__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.welcomeCTA__input {
+  padding: 12px 16px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--color-text);
+  background: var(--color-white);
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.welcomeCTA__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.welcomeCTA__input::placeholder {
+  color: var(--color-text-light);
+  opacity: 0.6;
+}
+
+.welcomeCTA__hint {
+  font-size: 12px;
+  color: var(--color-text-light);
+  text-align: right;
+}
+
+.welcomeCTA__avatarSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--color-background);
+  border-radius: 8px;
+}
+
+.welcomeCTA__error {
+  padding: 12px 16px;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid var(--color-error);
+  border-radius: 8px;
+  color: var(--color-error);
+  font-size: 14px;
+  text-align: center;
+}
+
+.welcomeCTA__submit {
+  margin-top: 8px;
+  width: 100%;
+  padding: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .welcomeCTA {
+    padding: 32px 24px;
+    margin-bottom: 32px;
+  }
+
+  .welcomeCTA__title {
+    font-size: 28px;
+  }
+
+  .welcomeCTA__form {
+    gap: 20px;
+  }
+
+  .welcomeCTA__avatarSection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcomeCTA {
+    padding: 24px 16px;
+  }
+
+  .welcomeCTA__title {
+    font-size: 24px;
+  }
+
+  .welcomeCTA__subtitle {
+    font-size: 14px;
+  }
+}
+

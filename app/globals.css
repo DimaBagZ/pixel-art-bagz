@@ -1,0 +1,104 @@
+/* Подключение шрифтов в стиле Fallout */
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&family=Orbitron:wght@400;500;600;700&display=swap");
+
+/* CSS переменные для цветовой палитры - Fallout стиль */
+:root {
+  /* Основные цвета */
+  --color-primary: #ffd700; /* Золотой (Fallout желтый) */
+  --color-primary-dark: #ccaa00; /* Темный золотой */
+  --color-accent: #8b4513; /* Коричневый (ржавчина) */
+  --color-accent-light: #a0522d; /* Светлый коричневый */
+  
+  /* Фон и поверхности */
+  --color-background: #1a1a1a; /* Темный фон (почти черный) */
+  --color-surface: #2d2d2d; /* Поверхности (темно-серый) */
+  --color-surface-light: #3a3a3a; /* Светлая поверхность */
+  --color-surface-dark: #151515; /* Очень темная поверхность */
+  
+  /* Текст */
+  --color-text: #e0e0e0; /* Светлый текст */
+  --color-text-light: #ffffff; /* Белый текст */
+  --color-text-muted: #a0a0a0; /* Приглушенный текст */
+  --color-text-dark: #808080; /* Темный текст */
+  
+  /* Границы и тени */
+  --color-border: #4a4a4a; /* Границы */
+  --color-border-light: #5a5a5a; /* Светлые границы */
+  --color-border-dark: #2a2a2a; /* Темные границы */
+  --color-shadow: rgba(0, 0, 0, 0.5); /* Тени */
+  --color-shadow-dark: rgba(0, 0, 0, 0.8); /* Темные тени */
+  
+  /* Статусные цвета */
+  --color-success: #00ff00; /* Зеленый (радиация/успех) */
+  --color-success-dark: #00cc00; /* Темный зеленый */
+  --color-error: #ff4444; /* Красный (опасность) */
+  --color-error-dark: #cc0000; /* Темный красный */
+  --color-warning: #ffaa00; /* Оранжевый (предупреждение) */
+  --color-warning-dark: #cc8800; /* Темный оранжевый */
+  
+  /* Игровые элементы */
+  --color-health: #ff0000; /* Красный для здоровья */
+  --color-health-bg: rgba(255, 0, 0, 0.2); /* Фон здоровья */
+  --color-stamina: #ffd700; /* Золотой для стамины */
+  --color-stamina-bg: rgba(255, 215, 0, 0.2); /* Фон стамины */
+  --color-experience: #00ff00; /* Зеленый для опыта */
+  --color-experience-bg: rgba(0, 255, 0, 0.2); /* Фон опыта */
+  
+  /* UI элементы */
+  --color-button-primary: #ffd700; /* Кнопка основная */
+  --color-button-primary-hover: #ffed4e; /* Кнопка при наведении */
+  --color-button-secondary: #8b4513; /* Кнопка вторичная */
+  --color-button-secondary-hover: #a0522d; /* Кнопка вторичная при наведении */
+  
+  /* Терминал */
+  --color-terminal-bg: #0a0a0a; /* Фон терминала */
+  --color-terminal-text: #00ff00; /* Текст терминала */
+  --color-terminal-border: #00ff00; /* Граница терминала */
+  
+  /* Белый и черный */
+  --color-white: #ffffff;
+  --color-black: #000000;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Orbitron", "Share Tech Mono", "Courier New", monospace, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
+  /* Отключение сглаживания для пиксель-арт эффекта */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Моноширинный шрифт для цифр и терминальных элементов */
+code,
+pre,
+.mono,
+.terminal {
+  font-family: "Share Tech Mono", "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Стили для терминальных элементов */
+.terminal {
+  background-color: var(--color-terminal-bg);
+  color: var(--color-terminal-text);
+  border: 1px solid var(--color-terminal-border);
+  padding: 1rem;
+  font-family: "Share Tech Mono", monospace;
+}

@@ -1,0 +1,287 @@
+/**
+ * Стили страницы дашборда
+ * БЭМ методология
+ */
+
+.main {
+  min-height: 100vh;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--color-background), var(--color-accent));
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Блок: header */
+.header {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header__userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header__userName {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.header__userSubtitle {
+  font-size: 14px;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.header__actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.header__link {
+  text-decoration: none;
+}
+
+/* Блок: section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Блок: statisticsGrid */
+.statisticsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Блок: chartContainer */
+.chartContainer {
+  margin-bottom: 24px;
+}
+
+/* Блок: difficultyGrid */
+.difficultyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Блок: difficultyCard */
+.difficultyCard {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.difficultyCard__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.difficultyCard__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.difficultyCard__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.difficultyCard__statLabel {
+  font-size: 14px;
+  color: var(--color-text-light);
+}
+
+.difficultyCard__statValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Блок: difficultyCard__progress */
+.difficultyCard__progress {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.difficultyCard__progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .main {
+    padding: 16px;
+  }
+
+  .container {
+    gap: 24px;
+  }
+
+  .header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .header__user {
+    flex: 1 1 auto;
+    min-width: 0; /* Позволяет сжиматься при необходимости */
+    gap: 12px;
+    overflow: hidden; /* Предотвращает выход за границы */
+  }
+
+  /* Уменьшаем аватар на мобильных */
+  .header__user :global(.userAvatar) {
+    flex-shrink: 0;
+  }
+
+  .header__user :global(.userAvatar--large) {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  .header__userInfo {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .header__userName {
+    font-size: 18px;
+    white-space: normal; /* Разрешаем перенос текста */
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+    line-height: 1.2;
+  }
+
+  .header__userSubtitle {
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header__actions {
+    flex: 0 0 auto;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .header__link {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .header__link button {
+    width: auto;
+    font-size: 11px;
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+
+  .statisticsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .difficultyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .section__title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+  }
+
+  .header {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .header__user {
+    gap: 8px;
+  }
+
+  .header__user :global(.userAvatar--large) {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .header__userName {
+    font-size: 16px;
+  }
+
+  .header__userSubtitle {
+    display: none; /* Скрываем подзаголовок на очень маленьких экранах */
+  }
+
+  .header__actions {
+    gap: 4px;
+  }
+
+  .header__link button {
+    font-size: 10px;
+    padding: 5px 6px;
+  }
+
+  .statisticsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

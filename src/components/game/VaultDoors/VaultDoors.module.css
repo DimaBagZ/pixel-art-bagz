@@ -1,0 +1,228 @@
+/**
+ * Стили для ворот бункера
+ * Fallout стиль с металлической текстурой и ржавчиной
+ */
+
+.vaultDoors {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.vaultDoorPanel {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    var(--color-surface-dark) 0%,
+    var(--color-surface) 50%,
+    var(--color-surface-dark) 100%
+  );
+  border: 3px solid var(--color-accent);
+  box-shadow: 
+    inset 0 0 50px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(139, 69, 19, 0.5);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+}
+
+.vaultDoorPanel--left {
+  left: 0;
+  border-right: 2px solid var(--color-accent-dark);
+}
+
+.vaultDoorPanel--right {
+  right: 0;
+  border-left: 2px solid var(--color-accent-dark);
+}
+
+.vaultDoorPanel--open.vaultDoorPanel--left {
+  transform: translateX(-100%);
+}
+
+.vaultDoorPanel--open.vaultDoorPanel--right {
+  transform: translateX(100%);
+}
+
+.vaultDoorPanel--animating {
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vaultDoorPanel__surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.vaultDoorPanel__texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(139, 69, 19, 0.1) 2px,
+      rgba(139, 69, 19, 0.1) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(139, 69, 19, 0.1) 2px,
+      rgba(139, 69, 19, 0.1) 4px
+    );
+  opacity: 0.3;
+}
+
+.vaultDoorPanel__rust {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(139, 69, 19, 0.4) 0%,
+      transparent 15%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(139, 69, 19, 0.4) 0%,
+      transparent 15%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(139, 69, 19, 0.2) 0%,
+      transparent 20%
+    );
+  pointer-events: none;
+}
+
+.vaultDoorPanel__bolts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.vaultDoorPanel__bolt {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--color-accent);
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 5px rgba(0, 0, 0, 0.5),
+    0 0 5px rgba(255, 215, 0, 0.3);
+  transform: translate(-50%, -50%);
+}
+
+.vaultDoorPanel__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.vaultDoors__buttonContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vaultDoors__centerNut {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+/* Гайка */
+.vaultNut {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  user-select: none;
+}
+
+.vaultNut:hover {
+  transform: scale(1.1);
+}
+
+.vaultNut:active {
+  transform: scale(0.95);
+}
+
+.vaultNut--animating {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vaultNut__icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+  transition: filter 0.3s ease;
+}
+
+.vaultNut:hover .vaultNut__icon {
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+}
+
+.vaultNut__text {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(255, 215, 0, 0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.vaultNut:hover .vaultNut__text {
+  color: var(--color-primary-dark);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .vaultNut__icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .vaultNut__text {
+    font-size: 14px;
+  }
+}
+

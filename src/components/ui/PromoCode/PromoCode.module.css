@@ -1,0 +1,59 @@
+/* Блок: promoCode */
+.promoCode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--color-shadow);
+}
+
+/* Элемент: promoCode__label */
+.promoCode__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Элемент: promoCode__code */
+.promoCode__code {
+  font-size: 32px;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  color: var(--color-white);
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 8px;
+  letter-spacing: 4px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .promoCode {
+    padding: 20px;
+  }
+
+  .promoCode__code {
+    font-size: 24px;
+    letter-spacing: 2px;
+    padding: 10px 20px;
+  }
+}
+

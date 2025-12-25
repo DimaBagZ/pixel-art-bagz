@@ -1,0 +1,72 @@
+/**
+ * Стили компонента StatisticsCard
+ * БЭМ методология
+ */
+
+.statisticsCard {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statisticsCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.statisticsCard__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statisticsCard__icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.statisticsCard__title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.statisticsCard__value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.statisticsCard__subtitle {
+  font-size: 12px;
+  color: var(--color-text-light);
+  margin-top: -4px;
+}
+
+/* Модификаторы тренда */
+.statisticsCard--trend-up {
+  border-left: 4px solid var(--color-success);
+}
+
+.statisticsCard--trend-down {
+  border-left: 4px solid var(--color-error);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .statisticsCard {
+    padding: 16px;
+  }
+
+  .statisticsCard__value {
+    font-size: 28px;
+  }
+}
+

@@ -1,0 +1,285 @@
+/**
+ * Стили для игрового UI
+ * Fallout терминальный стиль
+ */
+
+.gameUI {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  font-family: "Share Tech Mono", monospace;
+}
+
+/* Верхняя панель */
+.gameUI__topBar {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  padding: 15px 30px;
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.3),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+/* Левая панель */
+.gameUI__leftPanel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 250px;
+}
+
+/* Полоска здоровья */
+.healthBar {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.healthBar__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.healthBar__icon {
+  font-size: 16px;
+}
+
+.healthBar__text {
+  font-weight: 600;
+}
+
+.healthBar__container {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.healthBar__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--color-success);
+  transition: width 0.3s ease, background-color 0.3s ease;
+  box-shadow: 
+    0 0 10px rgba(0, 255, 0, 0.5),
+    inset 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.healthBar__value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+/* Полоска стамины */
+.staminaBar {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.staminaBar__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.staminaBar__icon {
+  font-size: 16px;
+}
+
+.staminaBar__text {
+  font-weight: 600;
+}
+
+.staminaBar__container {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.staminaBar__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-stamina) 0%,
+    var(--color-warning) 100%
+  );
+  transition: width 0.3s ease;
+  box-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.5),
+    inset 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.staminaBar__value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+/* Отображение уровня */
+.levelDisplay {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--color-primary);
+  border-radius: 4px;
+  box-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.3),
+    inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.levelDisplay__label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.levelDisplay__value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* Отображение монет */
+.coinsDisplay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--color-primary);
+  border-radius: 4px;
+  box-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.3),
+    inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.coinsDisplay__icon {
+  font-size: 20px;
+}
+
+.coinsDisplay__value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  transition: transform 0.3s ease;
+}
+
+.coinsDisplay__value--animating {
+  transform: scale(1.2);
+  color: var(--color-success);
+}
+
+/* Счетчик инвентаря */
+.inventoryCounter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid var(--color-primary);
+  border-radius: 4px;
+  box-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.3),
+    inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.inventoryCounter__icon {
+  font-size: 20px;
+}
+
+.inventoryCounter__value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.inventoryCounter__value--full {
+  color: var(--color-error);
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+}
+
+.inventoryCounter__warning {
+  font-size: 12px;
+  color: var(--color-error);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .gameUI__topBar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 20px;
+  }
+
+  .gameUI__leftPanel {
+    min-width: 200px;
+  }
+
+  .levelDisplay__value,
+  .coinsDisplay__value,
+  .inventoryCounter__value {
+    font-size: 16px;
+  }
+}
+

@@ -1,0 +1,115 @@
+/**
+ * Стили компонента WelcomeFeatures
+ * БЭМ методология
+ */
+
+.welcomeFeatures {
+  margin-bottom: 40px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.welcomeFeatures__title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+  margin: 0 0 32px 0;
+}
+
+.welcomeFeatures__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.welcomeFeatures__item {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: slideUp 0.6s ease-out backwards;
+}
+
+.welcomeFeatures__item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+.welcomeFeatures__itemIcon {
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.welcomeFeatures__itemTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 12px 0;
+}
+
+.welcomeFeatures__itemDescription {
+  font-size: 14px;
+  color: var(--color-text-light);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .welcomeFeatures {
+    margin-bottom: 32px;
+  }
+
+  .welcomeFeatures__title {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  .welcomeFeatures__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .welcomeFeatures__item {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcomeFeatures__title {
+    font-size: 24px;
+  }
+
+  .welcomeFeatures__item {
+    padding: 16px;
+  }
+
+  .welcomeFeatures__itemIcon {
+    font-size: 40px;
+  }
+}
+

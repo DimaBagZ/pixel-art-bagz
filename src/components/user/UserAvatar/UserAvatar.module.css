@@ -1,0 +1,69 @@
+/* Блок: userAvatar */
+.userAvatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-background-light);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.userAvatar:hover {
+  transform: scale(1.05);
+}
+
+/* Модификаторы размера */
+.userAvatar--small {
+  width: 40px;
+  height: 40px;
+}
+
+.userAvatar--medium {
+  width: 64px;
+  height: 64px;
+}
+
+.userAvatar--large {
+  width: 120px;
+  height: 120px;
+}
+
+/* Модификатор с рамкой */
+.userAvatar--bordered {
+  border: 3px solid var(--color-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Элемент: userAvatar__image */
+.userAvatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Элемент: userAvatar__fallback */
+.userAvatar__fallback {
+  font-size: 1.5em;
+  line-height: 1;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .userAvatar--small {
+    width: 36px;
+    height: 36px;
+  }
+
+  .userAvatar--medium {
+    width: 56px;
+    height: 56px;
+  }
+
+  .userAvatar--large {
+    width: 100px;
+    height: 100px;
+  }
+}
+

@@ -1,0 +1,78 @@
+/**
+ * Стили компонента StatisticsChart
+ * БЭМ методология
+ */
+
+.statisticsChart {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+}
+
+.statisticsChart__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 20px 0;
+}
+
+.statisticsChart__container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.statisticsChart__bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statisticsChart__barLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.statisticsChart__barContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  background: var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.statisticsChart__barFill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  min-width: 2px;
+}
+
+.statisticsChart__barValue {
+  position: absolute;
+  right: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  z-index: 1;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .statisticsChart {
+    padding: 16px;
+  }
+
+  .statisticsChart__title {
+    font-size: 16px;
+  }
+
+  .statisticsChart__barContainer {
+    height: 28px;
+  }
+}
+
