@@ -30,6 +30,8 @@ export const CoinsDisplay: React.FC<CoinsDisplayProps> = ({ count }) => {
         clearTimeout(timer);
       };
     }
+    // Явно возвращаем undefined для случая, когда условие не выполняется
+    return undefined;
   }, [count, displayCount]);
 
   return (

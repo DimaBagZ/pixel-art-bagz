@@ -5,7 +5,6 @@
  */
 
 import type { Position, GameItem, GameMap } from "@/types/pixel-art-game.types";
-import { TileType } from "@/types/pixel-art-game.types";
 import { TileMap } from "../map/TileMap";
 
 /**
@@ -15,7 +14,9 @@ export class CollisionDetector {
   private readonly tileMap: TileMap;
 
   constructor(map: GameMap) {
-    this.tileMap = new TileMap(map.tiles, map.width, map.height);
+    // Создаем копию массива для избежания проблем с readonly типами
+    const tilesCopy = map.tiles.map(row => [...row]);
+    this.tileMap = new TileMap(tilesCopy, map.width, map.height);
   }
 
   /**

@@ -18,7 +18,6 @@ export const InventoryCounter: React.FC<InventoryCounterProps> = ({
   current,
   max,
 }) => {
-  const percentage = (current / max) * 100;
   const isFull = current >= max;
 
   return (

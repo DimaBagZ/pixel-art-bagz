@@ -7,7 +7,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { GameState } from "@/types/pixel-art-game.types";
 import { gameStateService } from "@/services/storage/GameStateService";
-import { GAME_CONFIG } from "@/utils/pixel-art-constants";
 import { STORAGE_KEYS } from "@/services/storage/StorageTypes";
 
 export interface UseGameStateReturn {

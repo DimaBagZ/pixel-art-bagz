@@ -8,7 +8,6 @@ import { useMemo, useEffect, useRef } from "react";
 import { useGameState } from "./useGameState";
 import { pixelArtStatisticsService } from "@/services/storage/PixelArtStatisticsService";
 import type { PixelArtGameStatistics } from "@/types/pixel-art-statistics.types";
-import { createEmptyStatistics } from "@/types/pixel-art-statistics.types";
 
 export interface UsePixelArtStatisticsReturn {
   readonly statistics: PixelArtGameStatistics;

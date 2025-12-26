@@ -5,7 +5,7 @@
  */
 
 import { defaultStorageService } from "./StorageService";
-import { STORAGE_KEYS, STORAGE_VERSION } from "./StorageTypes";
+import { STORAGE_VERSION } from "./StorageTypes";
 import type { PixelArtAchievement, PixelArtAchievementsData } from "@/types/pixel-art-achievements.types";
 import { PixelArtAchievementType } from "@/types/pixel-art-achievements.types";
 import type { PixelArtGameStatistics } from "@/types/pixel-art-statistics.types";

@@ -40,7 +40,7 @@ export class MovementSystem {
   /**
    * Обновить движение и стамину
    */
-  updateMovement(movementType: MovementType, deltaTime: number): {
+  updateMovement(movementType: MovementType): {
     movementType: MovementType;
     staminaDrained: number;
     staminaRestored: number;

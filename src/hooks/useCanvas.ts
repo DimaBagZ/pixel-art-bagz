@@ -13,7 +13,7 @@ export interface UseCanvasOptions {
 }
 
 export interface UseCanvasReturn {
-  readonly canvasRef: React.RefObject<HTMLCanvasElement>;
+  readonly canvasRef: React.RefObject<HTMLCanvasElement | null>;
   readonly getContext: () => CanvasRenderingContext2D | null;
   readonly resize: (width: number, height: number) => void;
 }

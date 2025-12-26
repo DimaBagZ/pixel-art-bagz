@@ -25,7 +25,6 @@ export const VaultDoors: React.FC<VaultDoorsProps> = ({
   isOpen,
   hasSavedGame,
   onOpen,
-  onClose,
   hideNut = false,
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -44,6 +43,8 @@ export const VaultDoors: React.FC<VaultDoorsProps> = ({
     } else {
       setIsAnimating(false);
     }
+    // Явно возвращаем undefined для случая, когда условие не выполняется
+    return undefined;
   }, [isOpen]);
 
   const handleNutClick = useCallback((): void => {
