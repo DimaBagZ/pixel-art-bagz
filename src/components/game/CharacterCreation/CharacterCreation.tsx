@@ -92,8 +92,6 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({
     return null;
   }
 
-  const selectedPreset = CHARACTER_PRESETS[selectedClass];
-
   return (
     <Modal 
       isOpen={isOpen} 
