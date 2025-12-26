@@ -1,0 +1,176 @@
+/**
+ * Стили для мобильного управления
+ */
+
+.mobileControls {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-end;
+  z-index: 600;
+  pointer-events: auto;
+}
+
+/* Увеличенный отступ от низа на мобильных устройствах */
+@media (max-width: 768px) {
+  .mobileControls {
+    bottom: 90px; /* Отступ от низа с учетом браузерного бара */
+  }
+}
+
+.mobileControls__right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+/* Виртуальный джойстик */
+.mobileControls__movement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.movementPad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.movementButton__row {
+  display: flex;
+  gap: 5px;
+}
+
+.movementButton {
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-primary);
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.movementButton:active {
+  background: rgba(255, 215, 0, 0.2);
+  transform: scale(0.95);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+/* Кнопка бега - слева от стрелок */
+.runButton {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid var(--color-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  display: none; /* Скрыто на десктопе */
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.runButton:active,
+.runButton__active {
+  background: rgba(255, 215, 0, 0.2);
+  transform: scale(0.95);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+/* Кнопка взаимодействия - выше стрелок */
+.interactButton {
+  width: 55px;
+  height: 55px;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: "Share Tech Mono", monospace;
+  color: var(--color-primary);
+  background: rgba(0, 80, 50, 0.9);
+  border: 2px solid #00ff88;
+  border-radius: 50%;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.interactButton:active {
+  background: rgba(0, 255, 136, 0.3);
+  transform: scale(0.95);
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+}
+
+/* Скрываем на десктопе */
+@media (min-width: 769px) {
+  .mobileControls {
+    display: none;
+  }
+
+  .runButton {
+    display: none;
+  }
+}
+
+/* Показываем на мобильных */
+@media (max-width: 768px) {
+  .runButton {
+    display: flex;
+  }
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 480px) {
+  .mobileControls {
+    bottom: 85px; /* Отступ от низа с учетом браузерного бара */
+    right: 5px;
+    gap: 8px;
+  }
+
+  .mobileControls__right {
+    gap: 8px;
+  }
+
+  .runButton {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .movementButton {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  .interactButton {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+}

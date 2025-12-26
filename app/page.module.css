@@ -58,6 +58,14 @@
   gap: 12px;
 }
 
+.header__center__desktop {
+  display: flex;
+}
+
+.header__right__desktop {
+  display: flex;
+}
+
 .header__userName {
   font-family: "Share Tech Mono", monospace;
   font-size: 16px;
@@ -107,45 +115,31 @@
 @media (max-width: 768px) {
   .header {
     padding: 10px 15px;
-    flex-wrap: wrap;
+    height: 60px; /* Фиксированная высота для мобильных */
   }
 
-  .header__center {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    margin-top: 10px;
+  .header__center__desktop {
+    display: none; /* Скрываем на мобильных */
   }
 
-  .header__userName {
-    font-size: 14px;
-  }
-
-  .header__button {
-    font-size: 12px;
-    padding: 8px 12px;
+  .header__right__desktop {
+    display: none; /* Скрываем на мобильных */
   }
 
   .gameArea {
-    margin-top: 100px; /* Больше отступ для мобильных */
+    margin-top: 60px; /* Меньше отступ для мобильных */
+    height: calc(100vh - 60px);
   }
 }
 
 @media (max-width: 480px) {
   .header {
     padding: 8px 10px;
-  }
-
-  .header__right {
-    gap: 5px;
-  }
-
-  .header__button {
-    font-size: 11px;
-    padding: 6px 10px;
+    height: 55px;
   }
 
   .gameArea {
-    margin-top: 120px;
+    margin-top: 55px;
+    height: calc(100vh - 55px);
   }
 }

@@ -86,18 +86,60 @@
 
 /* Адаптивность */
 @media (max-width: 768px) {
+  .pauseMenu {
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
   .pauseMenu__content {
     min-width: 90%;
+    max-width: 90%;
     padding: 30px 20px;
+    margin: 0 auto; /* Центрирование контента */
   }
 
   .pauseMenu__title {
     font-size: 24px;
+    margin-bottom: 25px;
+  }
+
+  .pauseMenu__buttons {
+    align-items: center; /* Центрирование кнопок */
+    gap: 12px;
+    margin-bottom: 20px;
   }
 
   .pauseMenu__button {
     font-size: 14px;
-    padding: 12px 15px;
+    padding: 15px 20px; /* Увеличенный padding для большего отступа текста */
+    width: 100%;
+    max-width: 100%;
+    text-align: center; /* Центрирование текста внутри кнопки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pauseMenu__hint {
+    margin-top: 10px; /* Дополнительный отступ для подсказки */
+  }
+}
+
+@media (max-width: 480px) {
+  .pauseMenu__content {
+    min-width: 95%;
+    max-width: 95%;
+    padding: 25px 15px;
+  }
+
+  .pauseMenu__title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .pauseMenu__button {
+    font-size: 13px;
+    padding: 14px 18px; /* Еще больший padding для маленьких экранов */
   }
 }
 

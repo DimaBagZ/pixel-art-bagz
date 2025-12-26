@@ -28,10 +28,10 @@ export interface GameUIProps {
 /**
  * Компонент игрового UI
  */
-export const GameUI: React.FC<GameUIProps> = ({ 
-  stats, 
-  coins, 
-  inventory, 
+export const GameUI: React.FC<GameUIProps> = ({
+  stats,
+  coins,
+  inventory,
   mapLevel = 1,
   isOnExit = false,
   isNearTerminal = false,
@@ -67,9 +67,15 @@ export const GameUI: React.FC<GameUIProps> = ({
         <div className={styles.exitPrompt}>
           <div className={styles.exitPrompt__content}>
             <span className={styles.exitPrompt__text}>Нажмите чтобы спуститься</span>
-            <button 
+            <button
               className={styles.exitPrompt__button}
               onClick={onGoToNextLevel}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                if (onGoToNextLevel) {
+                  onGoToNextLevel();
+                }
+              }}
             >
               ▼ ЭТАЖ {mapLevel + 1}
             </button>
@@ -83,7 +89,12 @@ export const GameUI: React.FC<GameUIProps> = ({
           <div className={styles.interactionPrompt__content}>
             <span className={styles.interactionPrompt__icon}>💻</span>
             <span className={styles.interactionPrompt__text}>
-              Нажмите <kbd className={styles.keyHint}>E</kbd> для торговли
+              <span className={styles.interactionPrompt__desktop}>
+                Нажмите <kbd className={styles.keyHint}>E</kbd> для торговли
+              </span>
+              <span className={styles.interactionPrompt__mobile}>
+                Нажмите кнопку <span className={styles.keyHint}>E</span> для торговли
+              </span>
             </span>
           </div>
         </div>
@@ -95,7 +106,12 @@ export const GameUI: React.FC<GameUIProps> = ({
           <div className={styles.interactionPrompt__contentTreasure}>
             <span className={styles.interactionPrompt__icon}>🔒</span>
             <span className={styles.interactionPrompt__text}>
-              Нажмите <kbd className={styles.keyHint}>E</kbd> чтобы открыть
+              <span className={styles.interactionPrompt__desktop}>
+                Нажмите <kbd className={styles.keyHint}>E</kbd> чтобы открыть
+              </span>
+              <span className={styles.interactionPrompt__mobile}>
+                Нажмите кнопку <span className={styles.keyHint}>E</span> чтобы открыть
+              </span>
             </span>
           </div>
         </div>
@@ -103,4 +119,3 @@ export const GameUI: React.FC<GameUIProps> = ({
     </div>
   );
 };
-

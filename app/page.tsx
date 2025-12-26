@@ -20,6 +20,8 @@ import { PauseMenu } from "@/components/game/PauseMenu";
 import { CharacterCreation } from "@/components/game/CharacterCreation";
 import { TradeTerminal } from "@/components/game/TradeTerminal";
 import { TreasurePuzzle } from "@/components/game/TreasurePuzzle";
+import { MobileControls } from "@/components/game/MobileControls/MobileControls";
+import { MobileMenu } from "@/components/game/MobileMenu/MobileMenu";
 import { UserAvatar } from "@/components/user/UserAvatar";
 import { Button } from "@/components/ui/Button";
 import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
@@ -45,8 +47,8 @@ export default function Home() {
     getGameState,
     updateGame,
     handleMove,
+    handleStop,
     startGame,
-    resetGame,
     restartGame,
     pauseGame,
     resumeGame,
@@ -84,13 +86,13 @@ export default function Home() {
   const handleDoorsOpen = useCallback((): void => {
     // Ждём загрузки игры
     if (isGameLoading) return;
-    
+
     // Если нет сохраненной игры, показываем создание персонажа
     if (!hasSavedGame && !gameState.isGameStarted) {
       setShowCharacterCreation(true);
       return;
     }
-    
+
     setDoorsOpen(true);
     if (!gameState.isGameStarted) {
       startGame();
@@ -98,25 +100,70 @@ export default function Home() {
       resumeGame();
     }
   }, [isGameLoading, hasSavedGame, gameState.isGameStarted, startGame, resumeGame]);
-  
+
   // Обработка создания персонажа
-  const handleCharacterCreated = useCallback((stats: PlayerStats, characterClass: "SURVIVOR" | "EXPLORER" | "COLLECTOR"): void => {
+  const handleCharacterCreated = useCallback(
+    (stats: PlayerStats, characterClass: "SURVIVOR" | "EXPLORER" | "COLLECTOR"): void => {
+      setShowCharacterCreation(false);
+      // Сохраняем выбранный класс персонажа
+      updateCharacterClass(characterClass);
+      // Передаем stats в startGame для применения характеристик
+      startGame(stats);
+      // Открываем ворота после небольшой задержки для завершения анимации
+      setTimeout(() => {
+        setDoorsOpen(true);
+      }, 100);
+    },
+    [startGame, updateCharacterClass]
+  );
+
+  // Обработка отмены создания персонажа
+  const handleCharacterCreationCancel = useCallback((): void => {
+    // При отмене закрываем модальное окно
+    // Кнопка "Начать" должна появиться, так как ворота закрыты и hideNut станет false
     setShowCharacterCreation(false);
-    // Сохраняем выбранный класс персонажа
-    updateCharacterClass(characterClass);
-    // Передаем stats в startGame для применения характеристик
-    startGame(stats);
-    // Открываем ворота после небольшой задержки для завершения анимации
-    setTimeout(() => {
-      setDoorsOpen(true);
-    }, 100);
-  }, [startGame, updateCharacterClass]);
+  }, []);
 
   // Обработка закрытия ворот
   const handleDoorsClose = useCallback((): void => {
     setDoorsOpen(false);
     pauseGame();
   }, [pauseGame]);
+
+  // Обработчик взаимодействий (для клавиатуры и мобильных)
+  const handleInteract = useCallback((): void => {
+    if (!doorsOpen || !gameState.isGameStarted) return;
+
+    // Открыть торговый терминал
+    if (isNearTerminal && !showTradeTerminal) {
+      setShowTradeTerminal(true);
+      pauseGame();
+      return;
+    }
+
+    // Открыть ребус сокровищницы
+    if (isNearTreasureDoor && !showTreasurePuzzle && !gameState.treasureRoomUnlocked) {
+      setShowTreasurePuzzle(true);
+      pauseGame();
+      return;
+    }
+
+    // Переход на следующий уровень
+    if (isOnExit) {
+      goToNextLevel();
+    }
+  }, [
+    doorsOpen,
+    gameState.isGameStarted,
+    gameState.treasureRoomUnlocked,
+    pauseGame,
+    isNearTerminal,
+    isNearTreasureDoor,
+    isOnExit,
+    showTradeTerminal,
+    showTreasurePuzzle,
+    goToNextLevel,
+  ]);
 
   // Обработка паузы (ESC) и взаимодействия (E)
   useEffect(() => {
@@ -126,22 +173,18 @@ export default function Home() {
         setShowPauseMenu(true);
         pauseGame();
       }
-      
+
       // Взаимодействие по кнопке E (или У для русской раскладки)
-      if ((event.key === "e" || event.key === "E" || event.key === "у" || event.key === "У") && doorsOpen && gameState.isGameStarted) {
+      if (
+        (event.key === "e" ||
+          event.key === "E" ||
+          event.key === "у" ||
+          event.key === "У") &&
+        doorsOpen &&
+        gameState.isGameStarted
+      ) {
         event.preventDefault();
-        
-        // Открыть торговый терминал
-        if (isNearTerminal && !showTradeTerminal) {
-          setShowTradeTerminal(true);
-          pauseGame();
-        }
-        
-        // Открыть ребус сокровищницы
-        if (isNearTreasureDoor && !showTreasurePuzzle && !gameState.treasureRoomUnlocked) {
-          setShowTreasurePuzzle(true);
-          pauseGame();
-        }
+        handleInteract();
       }
     };
 
@@ -149,7 +192,7 @@ export default function Home() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [doorsOpen, gameState.isGameStarted, gameState.treasureRoomUnlocked, pauseGame, isNearTerminal, isNearTreasureDoor, showTradeTerminal, showTreasurePuzzle]);
+  }, [doorsOpen, gameState.isGameStarted, pauseGame, handleInteract]);
 
   // Обработка видимости страницы (автопауза при переключении вкладки)
   useEffect(() => {
@@ -222,13 +265,13 @@ export default function Home() {
         <div className={styles.header__left}>
           <Logo />
         </div>
-        <div className={styles.header__center}>
+        <div className={`${styles.header__center} ${styles.header__center__desktop}`}>
           <UserAvatar avatarId={validAvatarId} size="medium" showBorder={true} />
           <span className={styles.header__userName}>{profile.name}</span>
         </div>
-        <div className={styles.header__right}>
-          <Link 
-            href="/dashboard" 
+        <div className={`${styles.header__right} ${styles.header__right__desktop}`}>
+          <Link
+            href="/dashboard"
             className={styles.header__link}
             onClick={() => {
               // Сохраняем состояние перед переходом
@@ -245,8 +288,8 @@ export default function Home() {
               Статистика
             </Button>
           </Link>
-          <Link 
-            href="/profile" 
+          <Link
+            href="/profile"
             className={styles.header__link}
             onClick={() => {
               // Сохраняем состояние перед переходом
@@ -264,6 +307,27 @@ export default function Home() {
           </Link>
         </div>
       </header>
+
+      {/* Мобильное меню */}
+      <MobileMenu
+        avatarId={validAvatarId}
+        userName={profile.name}
+        onSaveAndNavigate={() => {
+          if (gameState.isGameStarted && !gameState.isPaused) {
+            const currentState = getGameState();
+            if (currentState) {
+              gameStateService.saveGameState(currentState);
+            }
+          }
+        }}
+        onPause={() => {
+          if (gameState.isGameStarted && !gameState.isPaused) {
+            setShowPauseMenu(true);
+            pauseGame();
+          }
+        }}
+        showPauseButton={doorsOpen && gameState.isGameStarted && !gameState.isPaused}
+      />
 
       {/* Игровая область */}
       <div className={styles.gameArea}>
@@ -302,11 +366,24 @@ export default function Home() {
             <Minimap gameState={gameState} size={200} />
 
             {/* Инвентарь */}
-            <Inventory 
+            <Inventory
               inventory={gameState.inventory}
               collectedResources={gameState.collectedResources}
               onInventoryChange={updateInventory}
               onSellResources={sellResources}
+            />
+
+            {/* Мобильные контролы */}
+            <MobileControls
+              onMove={handleMove}
+              onStop={handleStop}
+              onInteract={handleInteract}
+              enabled={
+                doorsOpen &&
+                gameState.isGameStarted &&
+                !gameState.isPaused &&
+                !showPauseMenu
+              }
             />
           </>
         )}
@@ -338,11 +415,7 @@ export default function Home() {
       <CharacterCreation
         isOpen={showCharacterCreation}
         onComplete={handleCharacterCreated}
-        onCancel={() => {
-          // При отмене просто закрываем модальное окно
-          // Кнопка "Начать" останется видимой, так как ворота закрыты
-          setShowCharacterCreation(false);
-        }}
+        onCancel={handleCharacterCreationCancel}
       />
 
       {/* Торговый терминал */}

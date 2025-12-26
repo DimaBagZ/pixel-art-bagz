@@ -35,9 +35,7 @@
     var(--color-surface-dark) 100%
   );
   border: 3px solid var(--color-accent);
-  box-shadow: 
-    inset 0 0 50px rgba(0, 0, 0, 0.8),
-    0 0 30px rgba(139, 69, 19, 0.5);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(139, 69, 19, 0.5);
   transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: auto;
 }
@@ -77,8 +75,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    repeating-linear-gradient(
+  background-image: repeating-linear-gradient(
       0deg,
       transparent,
       transparent 2px,
@@ -101,22 +98,13 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(
+  background: radial-gradient(
       circle at 10% 20%,
       rgba(139, 69, 19, 0.4) 0%,
       transparent 15%
     ),
-    radial-gradient(
-      circle at 90% 80%,
-      rgba(139, 69, 19, 0.4) 0%,
-      transparent 15%
-    ),
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(139, 69, 19, 0.2) 0%,
-      transparent 20%
-    );
+    radial-gradient(circle at 90% 80%, rgba(139, 69, 19, 0.4) 0%, transparent 15%),
+    radial-gradient(circle at 50% 50%, rgba(139, 69, 19, 0.2) 0%, transparent 20%);
   pointer-events: none;
 }
 
@@ -136,9 +124,7 @@
   background: var(--color-accent);
   border: 2px solid var(--color-primary);
   border-radius: 50%;
-  box-shadow: 
-    inset 0 0 5px rgba(0, 0, 0, 0.5),
-    0 0 5px rgba(255, 215, 0, 0.3);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5), 0 0 5px rgba(255, 215, 0, 0.3);
   transform: translate(-50%, -50%);
 }
 
@@ -209,9 +195,7 @@
   font-size: 18px;
   font-weight: 600;
   color: var(--color-primary);
-  text-shadow: 
-    0 0 10px rgba(255, 215, 0, 0.8),
-    0 0 20px rgba(255, 215, 0, 0.4);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.4);
   letter-spacing: 2px;
   text-transform: uppercase;
   transition: color 0.3s ease;
@@ -220,16 +204,3 @@
 .vaultNut:hover .vaultNut__text {
   color: var(--color-primary-dark);
 }
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .vaultNut__icon {
-    width: 60px;
-    height: 60px;
-  }
-
-  .vaultNut__text {
-    font-size: 14px;
-  }
-}
-

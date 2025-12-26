@@ -70,7 +70,7 @@
 .healthBar__container {
   position: relative;
   width: 100%;
-  height: 30px;
+  height: 18px; /* Уменьшено на 40% (30px * 0.6 = 18px) */
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid var(--color-border);
   border-radius: 4px;
@@ -128,7 +128,7 @@
 .staminaBar__container {
   position: relative;
   width: 100%;
-  height: 30px;
+  height: 18px; /* Уменьшено на 40% (30px * 0.6 = 18px) */
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid var(--color-border);
   border-radius: 4px;
@@ -433,6 +433,14 @@
   letter-spacing: 1px;
 }
 
+.interactionPrompt__desktop {
+  display: inline;
+}
+
+.interactionPrompt__mobile {
+  display: none;
+}
+
 .keyHint {
   display: inline-block;
   padding: 3px 8px;
@@ -489,5 +497,198 @@
 
   .interactionPrompt__text {
     font-size: 12px;
+  }
+
+  .interactionPrompt__desktop {
+    display: none;
+  }
+
+  .interactionPrompt__mobile {
+    display: inline;
+  }
+
+  .gameUI__topBar {
+    top: 60px !important; /* Прижато к хедеру (60px высота) */
+    left: auto !important;
+    right: 0 !important; /* Прижато к правому краю */
+    transform: none !important;
+    display: flex !important;
+    flex-direction: row !important; /* Явно указываем горизонтальное направление */
+    flex-wrap: nowrap !important; /* Все в одной строке */
+    justify-content: flex-end !important; /* Прижато к правому краю */
+    align-items: center !important; /* Выравнивание по центру вертикально */
+    gap: 4px !important; /* Минимальный отступ между элементами */
+    padding: 6px 8px !important; /* Компактный padding */
+    border-radius: 8px 0 0 8px !important; /* Скругление только слева */
+    border-left: 2px solid var(--color-primary) !important;
+    border-right: none !important;
+    border-top: 2px solid var(--color-primary) !important;
+    border-bottom: 2px solid var(--color-primary) !important;
+    overflow-x: auto !important; /* Прокрутка если не помещается */
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
+    width: auto !important; /* Ширина по содержимому */
+    max-width: calc(100% - 20px) !important; /* Максимальная ширина с отступом */
+    min-width: auto !important; /* Минимальная ширина по содержимому */
+  }
+
+  /* Скрываем скроллбар для более чистого вида */
+  .gameUI__topBar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gameUI__topBar {
+    -ms-overflow-style: none; /* IE и Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .gameUI__leftPanel {
+    top: 65px !important; /* Прижато к хедеру, чуть ниже topBar */
+    left: 0 !important; /* Прижато к левому краю */
+    min-width: 160px;
+    gap: 10px;
+  }
+
+  .healthBar__container,
+  .staminaBar__container {
+    height: 15px; /* Уменьшено на 40% (25px * 0.6 = 15px) */
+  }
+
+  .healthBar__label,
+  .staminaBar__label {
+    font-size: 12px;
+  }
+
+  .healthBar__value,
+  .staminaBar__value {
+    font-size: 11px;
+  }
+
+  .mapLevelBadge,
+  .levelDisplay,
+  .coinsDisplay,
+  .inventoryCounter {
+    display: inline-flex !important; /* inline-flex вместо flex для более компактного размера */
+    flex-direction: row !important; /* Горизонтальное расположение внутри */
+    align-items: center !important;
+    padding: 4px 8px !important; /* Компактный padding */
+    font-size: 10px !important; /* Уменьшенный размер шрифта */
+    flex-shrink: 0 !important; /* Не сжимаются */
+    flex-grow: 0 !important; /* Не растягиваются */
+    flex-basis: auto !important; /* Автоматический базовый размер */
+    gap: 4px !important; /* Уменьшенный gap внутри элементов */
+    width: auto !important; /* Автоматическая ширина */
+    min-width: auto !important; /* Минимальная ширина */
+    max-width: none !important; /* Без ограничения максимальной ширины */
+    white-space: nowrap !important; /* Не переносить текст */
+  }
+
+  .mapLevelBadge__label,
+  .levelDisplay__label {
+    font-size: 8px; /* Очень маленький размер для лейблов */
+    letter-spacing: 1px; /* Уменьшенный letter-spacing */
+  }
+
+  .coinsDisplay__icon,
+  .inventoryCounter__icon {
+    font-size: 12px; /* Уменьшенный размер иконок */
+  }
+
+  .mapLevelBadge__value,
+  .levelDisplay__value,
+  .coinsDisplay__value,
+  .inventoryCounter__value {
+    font-size: 14px; /* Уменьшенный размер значения */
+  }
+}
+
+@media (max-width: 480px) {
+  .gameUI__topBar {
+    top: 55px !important; /* Прижато к хедеру (55px высота) */
+    left: auto !important;
+    right: 0 !important; /* Прижато к правому краю */
+    display: flex !important;
+    flex-direction: row !important; /* Явно указываем горизонтальное направление */
+    flex-wrap: nowrap !important; /* Все в одной строке */
+    justify-content: flex-end !important; /* Прижато к правому краю */
+    padding: 5px 6px !important; /* Еще более компактный padding */
+    gap: 3px !important; /* Минимальный отступ */
+    border-radius: 8px 0 0 8px !important; /* Скругление только слева */
+    border-left: 2px solid var(--color-primary) !important;
+    border-right: none !important;
+    border-top: 2px solid var(--color-primary) !important;
+    border-bottom: 2px solid var(--color-primary) !important;
+    overflow-x: auto !important; /* Прокрутка если не помещается */
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
+    width: auto !important; /* Ширина по содержимому */
+    max-width: calc(100% - 10px) !important; /* Максимальная ширина с отступом */
+    min-width: auto !important; /* Минимальная ширина по содержимому */
+  }
+
+  .gameUI__leftPanel {
+    top: 60px !important; /* Прижато к хедеру, чуть ниже topBar */
+    left: 0 !important; /* Прижато к левому краю */
+    min-width: 140px;
+  }
+
+  .mapLevelBadge,
+  .levelDisplay,
+  .coinsDisplay,
+  .inventoryCounter {
+    display: inline-flex !important; /* inline-flex вместо flex для более компактного размера */
+    flex-direction: row !important; /* Горизонтальное расположение внутри */
+    align-items: center !important;
+    padding: 3px 6px !important; /* Очень компактный padding */
+    font-size: 9px !important; /* Еще меньший размер шрифта */
+    flex-shrink: 0 !important; /* Не сжимаются */
+    flex-grow: 0 !important; /* Не растягиваются */
+    flex-basis: auto !important; /* Автоматический базовый размер */
+    gap: 3px !important; /* Минимальный gap внутри элементов */
+    width: auto !important; /* Автоматическая ширина */
+    min-width: auto !important; /* Минимальная ширина */
+    max-width: none !important; /* Без ограничения максимальной ширины */
+    white-space: nowrap !important; /* Не переносить текст */
+  }
+
+  .mapLevelBadge__label,
+  .levelDisplay__label {
+    font-size: 7px; /* Очень маленький размер для лейблов */
+    letter-spacing: 0.5px; /* Минимальный letter-spacing */
+  }
+
+  .coinsDisplay__icon,
+  .inventoryCounter__icon {
+    font-size: 10px; /* Уменьшенный размер иконок */
+  }
+
+  .mapLevelBadge__value,
+  .levelDisplay__value,
+  .coinsDisplay__value,
+  .inventoryCounter__value {
+    font-size: 12px; /* Уменьшенный размер значения */
+  }
+
+  .exitPrompt {
+    bottom: 200px;
+    left: 10px;
+    right: 10px;
+    transform: none;
+  }
+
+  .exitPrompt__content {
+    padding: 12px 15px;
+  }
+
+  .exitPrompt__button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .interactionPrompt {
+    bottom: 180px;
+    left: 10px;
+    right: 10px;
+    transform: none;
   }
 }

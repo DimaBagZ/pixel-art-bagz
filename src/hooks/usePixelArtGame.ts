@@ -39,6 +39,7 @@ export interface UsePixelArtGameReturn {
   readonly getGameState: () => GameState;
   readonly updateGame: (deltaTime: number) => void;
   readonly handleMove: (direction: Direction, movementType: MovementType) => void;
+  readonly handleStop: () => void;
   readonly startGame: (initialStats?: PlayerStats) => void;
   readonly resetGame: () => void;
   readonly restartGame: () => void;
@@ -740,6 +741,13 @@ export const usePixelArtGame = (
     []
   );
 
+  const handleStop = useCallback((): void => {
+    keyboardStateRef.current = {
+      direction: null,
+      movementType: "IDLE" as MovementType,
+    };
+  }, []);
+
   const startGame = useCallback(
     (initialStats?: PlayerStats): void => {
       const engine = engineRef.current;
@@ -1136,6 +1144,7 @@ export const usePixelArtGame = (
     getGameState,
     updateGame,
     handleMove,
+    handleStop,
     startGame,
     resetGame,
     restartGame,

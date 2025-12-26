@@ -4,7 +4,7 @@
 
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import type { GameState } from "@/types/pixel-art-game.types";
 import { ItemType, TileType } from "@/types/pixel-art-game.types";
 import { GAME_CONFIG } from "@/utils/pixel-art-constants";
@@ -47,16 +47,43 @@ export const Minimap: React.FC<MinimapProps> = ({
   size = 200,
 }) => {
   const { map, player, items } = gameState;
-  const tileSize = size / Math.max(map.width, map.height);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Вычисляем размер увеличенной карты (реактивно)
+  const [expandedSize, setExpandedSize] = useState(() => {
+    if (typeof window !== "undefined") {
+      return Math.min(window.innerWidth * 0.9, window.innerHeight * 0.7, 600);
+    }
+    return 600;
+  });
+
+  // Обновляем размер при изменении окна
+  useEffect(() => {
+    const updateSize = (): void => {
+      if (typeof window !== "undefined") {
+        const newSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.7, 600);
+        setExpandedSize(newSize);
+      }
+    };
+
+    window.addEventListener("resize", updateSize);
+    updateSize(); // Вызываем сразу для правильного начального размера
+
+    return () => {
+      window.removeEventListener("resize", updateSize);
+    };
+  }, []);
 
   /**
    * Рендеринг мини-карты на Canvas
    */
-  const renderMinimap = (ctx: CanvasRenderingContext2D): void => {
+  const renderMinimap = (ctx: CanvasRenderingContext2D, renderSize: number): void => {
+    const renderTileSize = renderSize / Math.max(map.width, map.height);
+    
     // Очистка
     ctx.fillStyle = MINIMAP_COLORS.background;
-    ctx.fillRect(0, 0, size, size);
+    ctx.fillRect(0, 0, renderSize, renderSize);
 
     // Рендеринг карты
     for (let y = 0; y < map.height; y++) {
@@ -66,8 +93,8 @@ export const Minimap: React.FC<MinimapProps> = ({
           continue;
         }
 
-        const screenX = x * tileSize;
-        const screenY = y * tileSize;
+        const screenX = x * renderTileSize;
+        const screenY = y * renderTileSize;
 
         switch (tile.type) {
           case TileType.FLOOR:
@@ -110,23 +137,23 @@ export const Minimap: React.FC<MinimapProps> = ({
             ctx.fillStyle = MINIMAP_COLORS.background;
         }
 
-        ctx.fillRect(screenX, screenY, tileSize, tileSize);
+        ctx.fillRect(screenX, screenY, renderTileSize, renderTileSize);
         
         // Дополнительная отрисовка особых тайлов
         if (tile.type === TileType.EXIT) {
           ctx.fillStyle = "rgba(0, 255, 65, 0.5)";
           ctx.beginPath();
-          ctx.arc(screenX + tileSize / 2, screenY + tileSize / 2, tileSize / 2, 0, Math.PI * 2);
+          ctx.arc(screenX + renderTileSize / 2, screenY + renderTileSize / 2, renderTileSize / 2, 0, Math.PI * 2);
           ctx.fill();
         } else if (tile.type === TileType.TERMINAL) {
           ctx.fillStyle = "rgba(0, 255, 136, 0.5)";
           ctx.beginPath();
-          ctx.arc(screenX + tileSize / 2, screenY + tileSize / 2, tileSize / 2, 0, Math.PI * 2);
+          ctx.arc(screenX + renderTileSize / 2, screenY + renderTileSize / 2, renderTileSize / 2, 0, Math.PI * 2);
           ctx.fill();
         } else if (tile.type === TileType.TREASURE_DOOR) {
           ctx.fillStyle = "rgba(255, 170, 0, 0.5)";
           ctx.beginPath();
-          ctx.arc(screenX + tileSize / 2, screenY + tileSize / 2, tileSize / 3, 0, Math.PI * 2);
+          ctx.arc(screenX + renderTileSize / 2, screenY + renderTileSize / 2, renderTileSize / 3, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -139,8 +166,8 @@ export const Minimap: React.FC<MinimapProps> = ({
       }
 
       // Конвертируем пиксельную позицию в позицию на мини-карте
-      const screenX = (item.position.x / GAME_CONFIG.TILE_SIZE) * tileSize;
-      const screenY = (item.position.y / GAME_CONFIG.TILE_SIZE) * tileSize;
+      const screenX = (item.position.x / GAME_CONFIG.TILE_SIZE) * renderTileSize;
+      const screenY = (item.position.y / GAME_CONFIG.TILE_SIZE) * renderTileSize;
 
       ctx.fillStyle =
         item.type === ItemType.COIN
@@ -152,30 +179,30 @@ export const Minimap: React.FC<MinimapProps> = ({
           : MINIMAP_COLORS.rare;
 
       ctx.beginPath();
-      ctx.arc(screenX, screenY, tileSize / 3, 0, Math.PI * 2);
+      ctx.arc(screenX, screenY, renderTileSize / 3, 0, Math.PI * 2);
       ctx.fill();
     }
 
     // Рендеринг персонажа (позиция в пикселях)
-    const playerX = (player.position.x / GAME_CONFIG.TILE_SIZE) * tileSize;
-    const playerY = (player.position.y / GAME_CONFIG.TILE_SIZE) * tileSize;
+    const playerX = (player.position.x / GAME_CONFIG.TILE_SIZE) * renderTileSize;
+    const playerY = (player.position.y / GAME_CONFIG.TILE_SIZE) * renderTileSize;
 
     // Свечение игрока
-    const gradient = ctx.createRadialGradient(playerX, playerY, 0, playerX, playerY, tileSize * 2);
+    const gradient = ctx.createRadialGradient(playerX, playerY, 0, playerX, playerY, renderTileSize * 2);
     gradient.addColorStop(0, MINIMAP_COLORS.playerGlow);
     gradient.addColorStop(1, "transparent");
     ctx.fillStyle = gradient;
-    ctx.fillRect(playerX - tileSize * 2, playerY - tileSize * 2, tileSize * 4, tileSize * 4);
+    ctx.fillRect(playerX - renderTileSize * 2, playerY - renderTileSize * 2, renderTileSize * 4, renderTileSize * 4);
 
     // Тело игрока
     ctx.fillStyle = MINIMAP_COLORS.player;
     ctx.beginPath();
-    ctx.arc(playerX, playerY, tileSize / 2, 0, Math.PI * 2);
+    ctx.arc(playerX, playerY, renderTileSize / 2, 0, Math.PI * 2);
     ctx.fill();
 
     // Направление взгляда (угол)
     const angle = (player.angle * Math.PI) / 180;
-    const dirLength = tileSize * 1.5;
+    const dirLength = renderTileSize * 1.5;
     ctx.strokeStyle = MINIMAP_COLORS.player;
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -190,7 +217,7 @@ export const Minimap: React.FC<MinimapProps> = ({
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(playerX, playerY, tileSize / 2, 0, Math.PI * 2);
+    ctx.arc(playerX, playerY, renderTileSize / 2, 0, Math.PI * 2);
     ctx.stroke();
   };
 
@@ -207,18 +234,49 @@ export const Minimap: React.FC<MinimapProps> = ({
     }
 
     ctx.imageSmoothingEnabled = false;
-    renderMinimap(ctx);
-  }, [gameState, size, tileSize, map, player, items]);
+    const currentSize = isExpanded ? expandedSize : size;
+    renderMinimap(ctx, currentSize);
+  }, [gameState, size, map, player, items, isExpanded, expandedSize]);
+
+  const handleToggleExpand = useCallback((): void => {
+    setIsExpanded((prev) => !prev);
+  }, []);
+
+  const currentSize = isExpanded ? expandedSize : size;
 
   return (
-    <div className={styles.minimap} style={{ width: size, height: size }}>
-      <canvas
-        ref={canvasRef}
-        width={size}
-        height={size}
-        className={styles.minimap__canvas}
-      />
-      <div className={styles.minimap__label}>Карта</div>
-    </div>
+    <>
+      <div 
+        className={`${styles.minimap} ${isExpanded ? styles.minimap__expanded : ""}`}
+        style={!isExpanded ? { width: currentSize, height: currentSize } : undefined}
+        onClick={handleToggleExpand}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleToggleExpand();
+          }
+        }}
+        aria-label={isExpanded ? "Уменьшить карту" : "Увеличить карту"}
+      >
+        <canvas
+          ref={canvasRef}
+          width={currentSize}
+          height={currentSize}
+          className={styles.minimap__canvas}
+        />
+        <div className={styles.minimap__label}>
+          {isExpanded ? "Нажмите чтобы уменьшить" : "Нажмите чтобы увеличить"}
+        </div>
+      </div>
+      {isExpanded && (
+        <div 
+          className={styles.minimap__overlay}
+          onClick={handleToggleExpand}
+          aria-label="Закрыть карту"
+        />
+      )}
+    </>
   );
 };

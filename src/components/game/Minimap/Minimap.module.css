@@ -35,14 +35,45 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+  cursor: pointer;
+  user-select: none;
+}
+
+.minimap__expanded {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  bottom: auto !important;
+  right: auto !important;
+  z-index: 1000 !important;
+  cursor: pointer;
+  width: 90vw !important;
+  height: 90vw !important;
+  max-width: 600px !important;
+  max-height: 600px !important;
+  padding: 15px !important;
+}
+
+.minimap__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  cursor: pointer;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
   .minimap {
-    bottom: 80px;
+    bottom: 90px; /* Отступ от низа с учетом браузерного бара */
     left: 10px;
     padding: 5px;
+    width: 150px !important;
+    height: 150px !important;
   }
 
   .minimap__canvas {
@@ -52,6 +83,65 @@
 
   .minimap__label {
     font-size: 10px;
+  }
+
+  .minimap__expanded {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90vw !important;
+    height: 90vw !important;
+    max-width: 500px !important;
+    max-height: 500px !important;
+    bottom: auto !important;
+    padding: 10px !important;
+    z-index: 1000 !important;
+  }
+
+  .minimap__expanded .minimap__canvas {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .minimap {
+    bottom: 85px; /* Отступ от низа с учетом браузерного бара */
+    left: 5px;
+    padding: 4px;
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .minimap__canvas {
+    width: 120px;
+    height: 120px;
+  }
+
+  .minimap__label {
+    font-size: 9px;
+  }
+
+  .minimap__expanded {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 85vw !important;
+    height: 85vw !important;
+    max-width: 400px !important;
+    max-height: 400px !important;
+    bottom: auto !important;
+    padding: 10px !important;
+    z-index: 1000 !important;
+  }
+
+  .minimap__expanded .minimap__canvas {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
   }
 }
 
