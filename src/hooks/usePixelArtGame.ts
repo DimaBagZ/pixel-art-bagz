@@ -18,11 +18,14 @@ import type {
   ItemCollectionResult,
   Position,
   InventorySlot,
+  PlayerStats,
 } from "@/types/pixel-art-game.types";
-import { TileType } from "@/types/pixel-art-game.types";
+import { TileType, ItemType } from "@/types/pixel-art-game.types";
 import { GAME_CONFIG, MAP_LEVEL_CONFIG } from "@/utils/pixel-art-constants";
 import { GameStateManager } from "@/domain/game/GameStateManager";
 import { userStorageService } from "@/services/storage";
+import { pixelArtStatisticsService } from "@/services/storage/PixelArtStatisticsService";
+import { CHARACTER_PRESETS } from "@/components/game/CharacterCreation/CharacterCreation";
 
 export interface UsePixelArtGameOptions {
   readonly initialState?: GameState | null;
@@ -36,7 +39,7 @@ export interface UsePixelArtGameReturn {
   readonly getGameState: () => GameState;
   readonly updateGame: (deltaTime: number) => void;
   readonly handleMove: (direction: Direction, movementType: MovementType) => void;
-  readonly startGame: () => void;
+  readonly startGame: (initialStats?: PlayerStats) => void;
   readonly resetGame: () => void;
   readonly restartGame: () => void;
   readonly pauseGame: () => void;
@@ -329,23 +332,66 @@ export const usePixelArtGame = (
       engine = new PixelArtGameEngine();
     }
 
-    // Применяем бонус стамины из профиля
+    // Применяем характеристики персонажа из профиля
     const profile = userStorageService.getProfile();
-    if (profile && profile.staminaUpgrades && profile.staminaUpgrades > 0) {
-      const staminaBonus = profile.staminaUpgrades * 10;
+    if (profile) {
       const currentState = engine.getGameState();
-      const newMaxStamina = GAME_CONFIG.MAX_STAMINA + staminaBonus;
+      let needsUpdate = false;
+      const updatedStats = { ...currentState.player.stats };
 
-      // Обновляем maxStamina если она отличается
-      if (currentState.player.stats.maxStamina !== newMaxStamina) {
+      // Применяем характеристики выбранного класса персонажа
+      // Проверяем, нужно ли применять (если текущие значения не соответствуют классу)
+      if (profile.selectedCharacterClass) {
+        const preset = CHARACTER_PRESETS[profile.selectedCharacterClass];
+        if (preset) {
+          // Применяем только если значения не соответствуют классу (игра новая или класс изменился)
+          const baseMaxHealth = preset.stats.maxHealth;
+          const baseMaxStamina = preset.stats.maxStamina;
+          const staminaBonus = (profile.staminaUpgrades ?? 0) * 10;
+          const expectedMaxStamina = baseMaxStamina + staminaBonus;
+
+          // Если текущие значения не соответствуют классу, применяем
+          if (
+            currentState.player.stats.maxHealth !== baseMaxHealth ||
+            currentState.player.stats.maxStamina !== expectedMaxStamina
+          ) {
+            updatedStats.health = preset.stats.health;
+            updatedStats.maxHealth = preset.stats.maxHealth;
+            updatedStats.stamina = preset.stats.stamina;
+            updatedStats.maxStamina = preset.stats.maxStamina;
+            needsUpdate = true;
+          }
+        }
+      }
+
+      // Применяем бонус стамины из профиля (если еще не применен выше)
+      const staminaBonus = (profile.staminaUpgrades ?? 0) * 10;
+      if (staminaBonus > 0 && !needsUpdate) {
+        const newMaxStamina = updatedStats.maxStamina + staminaBonus;
+        if (currentState.player.stats.maxStamina !== newMaxStamina) {
+          updatedStats.maxStamina = newMaxStamina;
+          updatedStats.stamina = Math.min(
+            updatedStats.stamina + staminaBonus,
+            newMaxStamina
+          );
+          needsUpdate = true;
+        }
+      } else if (staminaBonus > 0 && needsUpdate) {
+        // Если уже обновляли характеристики класса, добавляем бонус стамины
+        updatedStats.maxStamina = updatedStats.maxStamina + staminaBonus;
+        updatedStats.stamina = Math.min(
+          updatedStats.stamina + staminaBonus,
+          updatedStats.maxStamina
+        );
+      }
+
+      // Обновляем состояние если нужно
+      if (needsUpdate) {
         engine.updateGameState({
           ...currentState,
           player: {
             ...currentState.player,
-            stats: {
-              ...currentState.player.stats,
-              maxStamina: newMaxStamina,
-            },
+            stats: updatedStats,
           },
         });
       }
@@ -568,6 +614,14 @@ export const usePixelArtGame = (
             item.id === result.item!.id ? { ...item, collected: true } : item
           );
 
+          // Обновляем накопительную статистику при сборе предмета
+          // Для всех типов кроме RARE_ITEM (который обрабатывается отдельно при добавлении в инвентарь)
+          if (result.item.type !== ItemType.RARE_ITEM) {
+            // Явно приводим тип к ItemType для надежности
+            const itemType = result.item.type as ItemType;
+            pixelArtStatisticsService.incrementItemCount(itemType);
+          }
+
           if (result.experienceGained > 0) {
             const oldLevel = newState.player.stats.level;
             const expResult = ExperienceSystem.addExperience(
@@ -616,18 +670,18 @@ export const usePixelArtGame = (
           }
 
           // Обновляем счётчики собранных ресурсов
-          if (result.item.type === "COIN") {
+          if (result.item.type === ItemType.COIN) {
             newState.coins += 1;
             newState.collectedResources = {
               ...newState.collectedResources,
               coins: newState.collectedResources.coins + 1,
             };
-          } else if (result.item.type === "POTION") {
+          } else if (result.item.type === ItemType.POTION) {
             newState.collectedResources = {
               ...newState.collectedResources,
               healthPotions: newState.collectedResources.healthPotions + 1,
             };
-          } else if (result.item.type === "STAMINA_POTION") {
+          } else if (result.item.type === ItemType.STAMINA_POTION) {
             newState.collectedResources = {
               ...newState.collectedResources,
               staminaPotions: newState.collectedResources.staminaPotions + 1,
@@ -636,6 +690,11 @@ export const usePixelArtGame = (
 
           if (result.addedToInventory) {
             newState.inventory = itemCollector.getUpdatedInventory();
+
+            // Если редкий предмет добавлен в инвентарь, обновляем статистику
+            if (result.item.type === ItemType.RARE_ITEM) {
+              pixelArtStatisticsService.incrementItemCount(ItemType.RARE_ITEM);
+            }
           }
 
           hasChanges = true;
@@ -681,27 +740,49 @@ export const usePixelArtGame = (
     []
   );
 
-  const startGame = useCallback((): void => {
-    const engine = engineRef.current;
-    if (!engine) return;
+  const startGame = useCallback(
+    (initialStats?: PlayerStats): void => {
+      const engine = engineRef.current;
+      if (!engine) return;
 
-    engine.startGame();
-    const newState = engine.getGameState();
-    gameStateRef.current = newState;
-    setHudGameState(newState);
+      // Если переданы начальные характеристики, применяем их
+      if (initialStats) {
+        const currentState = engine.getGameState();
+        const profile = userStorageService.getProfile();
+        const staminaBonus = (profile?.staminaUpgrades ?? 0) * 10;
 
-    setUiState({
-      isGameStarted: true,
-      isPaused: false,
-      isOnExit: false,
-      isNearTerminal: false,
-      isNearTreasureDoor: false,
-    });
+        engine.updateGameState({
+          ...currentState,
+          player: {
+            ...currentState.player,
+            stats: {
+              ...initialStats,
+              maxStamina: initialStats.maxStamina + staminaBonus,
+              stamina: initialStats.stamina + staminaBonus,
+            },
+          },
+        });
+      }
 
-    if (onStateChange) {
-      onStateChange(newState);
-    }
-  }, [onStateChange]);
+      engine.startGame();
+      const newState = engine.getGameState();
+      gameStateRef.current = newState;
+      setHudGameState(newState);
+
+      setUiState({
+        isGameStarted: true,
+        isPaused: false,
+        isOnExit: false,
+        isNearTerminal: false,
+        isNearTreasureDoor: false,
+      });
+
+      if (onStateChange) {
+        onStateChange(newState);
+      }
+    },
+    [onStateChange]
+  );
 
   const resetGame = useCallback((): void => {
     const engine = engineRef.current;
@@ -883,6 +964,9 @@ export const usePixelArtGame = (
       gameStateRef.current = updatedState;
       setHudGameState(updatedState);
 
+      // Обновляем статистику продажи
+      pixelArtStatisticsService.incrementItemsSold();
+
       // Если произошел левел-ап (может быть несколько уровней), принудительно сохраняем
       if (expResult.levelIncreased && expResult.newLevel > oldLevel) {
         forceSaveGameState(updatedState);
@@ -938,6 +1022,11 @@ export const usePixelArtGame = (
     const updatedState = engine.getGameState();
     gameStateRef.current = updatedState;
     setHudGameState(updatedState);
+
+    // Обновляем статистику продажи (продажа всех ресурсов = 1 продажа)
+    if (xpGain > 0) {
+      pixelArtStatisticsService.incrementItemsSold();
+    }
 
     // Если произошел левел-ап (может быть несколько уровней), принудительно сохраняем
     if (expResult.levelIncreased && expResult.newLevel > oldLevel) {

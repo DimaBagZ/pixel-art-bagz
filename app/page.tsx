@@ -31,7 +31,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const router = useRouter();
-  const { profile, isLoading } = useUserProfile();
+  const { profile, isLoading, updateCharacterClass } = useUserProfile();
   const { hasSavedGame } = useGameState();
   const [doorsOpen, setDoorsOpen] = useState(false);
   const [showPauseMenu, setShowPauseMenu] = useState(false);
@@ -100,16 +100,17 @@ export default function Home() {
   }, [isGameLoading, hasSavedGame, gameState.isGameStarted, startGame, resumeGame]);
   
   // Обработка создания персонажа
-  const handleCharacterCreated = useCallback((stats: PlayerStats): void => {
+  const handleCharacterCreated = useCallback((stats: PlayerStats, characterClass: "SURVIVOR" | "EXPLORER" | "COLLECTOR"): void => {
     setShowCharacterCreation(false);
-    // TODO: Передать stats в startGame когда будет поддержка кастомных характеристик
-    // Пока используем стандартные характеристики
-    startGame();
+    // Сохраняем выбранный класс персонажа
+    updateCharacterClass(characterClass);
+    // Передаем stats в startGame для применения характеристик
+    startGame(stats);
     // Открываем ворота после небольшой задержки для завершения анимации
     setTimeout(() => {
       setDoorsOpen(true);
     }, 100);
-  }, [startGame]);
+  }, [startGame, updateCharacterClass]);
 
   // Обработка закрытия ворот
   const handleDoorsClose = useCallback((): void => {

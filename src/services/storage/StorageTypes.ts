@@ -34,6 +34,7 @@ export interface UserProfile {
   readonly preferredDifficulty?: AIDifficulty; // Опционально для обратной совместимости
   readonly staminaUpgrades?: number; // Количество улучшений стамины (каждое +10 к max)
   readonly spentSkillPoints?: number; // Потраченные очки навыков
+  readonly selectedCharacterClass?: "SURVIVOR" | "EXPLORER" | "COLLECTOR"; // Выбранный класс персонажа
   readonly version: number;
 }
 

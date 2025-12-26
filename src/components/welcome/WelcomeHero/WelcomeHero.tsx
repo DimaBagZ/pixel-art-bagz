@@ -19,8 +19,8 @@ export const WelcomeHero: React.FC<WelcomeHeroProps> = ({ className = "" }) => {
     <section className={`${styles.welcomeHero} ${className}`}>
       <div className={styles.welcomeHero__container}>
         <h1 className={styles.welcomeHero__title}>
-          <span className={styles.welcomeHero__emoji}>🏛️</span>
-          Добро пожаловать в Бункер!
+          <span className={styles.welcomeHero__emoji}>⚙️</span>
+          ДОБРО ПОЖАЛОВАТЬ В БУНКЕР
         </h1>
         <p className={styles.welcomeHero__subtitle}>
           Исследуй мрачный постапокалиптический бункер в стиле Fallout. Собирай предметы,

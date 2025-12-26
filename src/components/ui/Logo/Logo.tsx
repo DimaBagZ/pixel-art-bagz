@@ -40,41 +40,23 @@ export const Logo: React.FC<LogoProps> = ({
         <svg
           width={sizePx}
           height={sizePx}
-          viewBox="0 0 72 72"
+          viewBox="0 0 80 80"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          aria-label="Логотип игры Крестики-нолики"
+          aria-label="Логотип игры Пиксель Арт Бункер"
           className={styles.logo__svg}
         >
-          {/* Фон с плавными краями */}
-          <rect
-            x="4"
-            y="4"
-            width="64"
-            height="64"
-            rx="12"
-            ry="12"
-            className={styles.logo__background}
+          {/* Внешний круг гайки */}
+          <circle cx="40" cy="40" r="35" fill="var(--color-accent)" stroke="var(--color-primary)" strokeWidth="3" />
+          {/* Внутренний шестигранник */}
+          <polygon
+            points="40,15 55,25 55,45 40,55 25,45 25,25"
+            fill="var(--color-primary)"
+            stroke="var(--color-accent)"
+            strokeWidth="2"
           />
-          {/* X */}
-          <path
-            d="M24 24L48 48M48 24L24 48"
-            stroke="currentColor"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={styles.logo__x}
-          />
-          {/* O */}
-          <circle
-            cx="36"
-            cy="36"
-            r="10"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="4"
-            className={styles.logo__o}
-          />
+          {/* Центральное отверстие */}
+          <circle cx="40" cy="40" r="8" fill="var(--color-background)" />
         </svg>
       </div>
     </div>

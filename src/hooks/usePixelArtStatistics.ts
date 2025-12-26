@@ -1,11 +1,12 @@
 /**
  * Хук для статистики пиксель-арт игры
- * Извлекает статистику из сохраненного состояния игры
+ * Использует накопительную статистику из отдельного хранилища
  * Соблюдает принцип Single Responsibility
  */
 
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { useGameState } from "./useGameState";
+import { pixelArtStatisticsService } from "@/services/storage/PixelArtStatisticsService";
 import type { PixelArtGameStatistics } from "@/types/pixel-art-statistics.types";
 import { createEmptyStatistics } from "@/types/pixel-art-statistics.types";
 
@@ -15,45 +16,68 @@ export interface UsePixelArtStatisticsReturn {
 }
 
 /**
+ * Интервал обновления статистики (5 секунд)
+ */
+const STATISTICS_UPDATE_INTERVAL = 5000;
+
+/**
  * Хук для получения статистики пиксель-арт игры
  */
 export const usePixelArtStatistics = (): UsePixelArtStatisticsReturn => {
   const { savedState } = useGameState();
+  const lastUpdateTimeRef = useRef<number>(0);
 
-  const statistics = useMemo((): PixelArtGameStatistics => {
-    if (!savedState) {
-      return createEmptyStatistics();
+  // Обновляем статистику периодически, если игра запущена
+  useEffect(() => {
+    if (!savedState?.isGameStarted) {
+      return;
     }
 
-    // Подсчёт собранных предметов из ресурсов или items
-    const resources = savedState.collectedResources;
-    const collectedPotions = resources?.healthPotions ?? savedState.items.filter(
-      (item) => item.type === "POTION" && item.collected
-    ).length;
-    const collectedStaminaPotions = resources?.staminaPotions ?? savedState.items.filter(
-      (item) => item.type === "STAMINA_POTION" && item.collected
-    ).length;
+    const updateInterval = setInterval(() => {
+      const now = Date.now();
+      // Обновляем статистику каждые 5 секунд
+      if (now - lastUpdateTimeRef.current >= STATISTICS_UPDATE_INTERVAL) {
+        pixelArtStatisticsService.updateStatistics(savedState);
+        lastUpdateTimeRef.current = now;
+      }
+    }, STATISTICS_UPDATE_INTERVAL);
 
-    return {
-      totalCoinsCollected: savedState.coins,
-      totalPotionsCollected: collectedPotions,
-      totalStaminaPotionsCollected: collectedStaminaPotions,
-      totalRareItemsCollected: savedState.items.filter(
-        (item) => item.type === "RARE_ITEM" && item.collected
-      ).length,
-      currentLevel: savedState.player.stats.level,
-      maxLevel: savedState.player.stats.level,
-      maxFloor: savedState.mapLevel ?? 1,
-      totalExperience: savedState.player.stats.experience,
-      totalPlayTime: savedState.gameStartTime
-        ? Date.now() - savedState.gameStartTime
-        : 0,
-      lastPlayed: savedState.lastSaveTime,
-      sessionsCount: 1, // TODO: добавить подсчет сессий
-      treasuresOpened: 0, // TODO: добавить подсчет сокровищниц
-      itemsSold: 0, // TODO: добавить подсчет проданных предметов
-      version: 2,
+    // Обновляем сразу при монтировании, если игра запущена
+    if (lastUpdateTimeRef.current === 0) {
+      pixelArtStatisticsService.updateStatistics(savedState);
+      lastUpdateTimeRef.current = Date.now();
+    }
+
+    return () => {
+      clearInterval(updateInterval);
+      // Финальное обновление при размонтировании
+      if (savedState?.isGameStarted) {
+        pixelArtStatisticsService.updateStatistics(savedState);
+      }
     };
+  }, [savedState]);
+
+  const statistics = useMemo((): PixelArtGameStatistics => {
+    // Получаем накопительную статистику из отдельного хранилища
+    const storedStats = pixelArtStatisticsService.getStatistics();
+    
+    // Если есть текущее состояние, обновляем только динамические значения для отображения
+    if (savedState) {
+      return {
+        ...storedStats,
+        // Обновляем только динамические значения для отображения (не сохраняем)
+        currentLevel: savedState.player.stats.level,
+        maxLevel: Math.max(storedStats.maxLevel, savedState.player.stats.level),
+        maxFloor: Math.max(storedStats.maxFloor, savedState.mapLevel ?? 1),
+        totalExperience: Math.max(
+          storedStats.totalExperience,
+          savedState.player.stats.experience
+        ),
+        lastPlayed: savedState.lastSaveTime,
+      };
+    }
+
+    return storedStats;
   }, [savedState]);
 
   return {

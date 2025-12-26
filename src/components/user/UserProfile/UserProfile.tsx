@@ -77,6 +77,48 @@ export const UserProfile: React.FC = () => {
           <UserNameInput currentName={profile.name} onSave={updateName} />
         </div>
 
+        {/* Выбранный персонаж */}
+        {profile.selectedCharacterClass && (
+          <div className={styles.userProfile__characterSection}>
+            <h3 className={styles.userProfile__characterTitle}>🎭 Выбранный персонаж</h3>
+            <div className={styles.userProfile__characterCard}>
+              {profile.selectedCharacterClass === "SURVIVOR" && (
+                <>
+                  <span className={styles.userProfile__characterIcon}>🛡️</span>
+                  <div className={styles.userProfile__characterInfo}>
+                    <span className={styles.userProfile__characterName}>Выживальщик</span>
+                    <span className={styles.userProfile__characterDesc}>
+                      Высокое здоровье (120) и стамина (100)
+                    </span>
+                  </div>
+                </>
+              )}
+              {profile.selectedCharacterClass === "EXPLORER" && (
+                <>
+                  <span className={styles.userProfile__characterIcon}>🗺️</span>
+                  <div className={styles.userProfile__characterInfo}>
+                    <span className={styles.userProfile__characterName}>Исследователь</span>
+                    <span className={styles.userProfile__characterDesc}>
+                      Баланс: здоровье (100) и стамина (120)
+                    </span>
+                  </div>
+                </>
+              )}
+              {profile.selectedCharacterClass === "COLLECTOR" && (
+                <>
+                  <span className={styles.userProfile__characterIcon}>⚡</span>
+                  <div className={styles.userProfile__characterInfo}>
+                    <span className={styles.userProfile__characterName}>Собиратель</span>
+                    <span className={styles.userProfile__characterDesc}>
+                      Высокая стамина (150), здоровье (80)
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Прокачка стамины */}
         <div className={styles.userProfile__upgradeSection}>
           <h3 className={styles.userProfile__upgradeTitle}>⚡ Улучшения персонажа</h3>

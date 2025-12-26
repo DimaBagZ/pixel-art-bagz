@@ -79,6 +79,15 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
     maxProgress: 15,
   },
   {
+    id: PixelArtAchievementType.POTIONS_20,
+    name: "Великий алхимик",
+    description: "Соберите 20 зелий здоровья",
+    icon: "🧬",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 20,
+  },
+  {
     id: PixelArtAchievementType.FIRST_STAMINA_POTION,
     name: "Энергетик",
     description: "Соберите своё первое зелье стамины",
@@ -95,6 +104,15 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
     unlockedAt: null,
     progress: 0,
     maxProgress: 10,
+  },
+  {
+    id: PixelArtAchievementType.STAMINA_POTIONS_20,
+    name: "Ультра-марафонец",
+    description: "Соберите 20 зелий стамины",
+    icon: "⚡",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 20,
   },
   {
     id: PixelArtAchievementType.FIRST_RARE_ITEM,
@@ -329,6 +347,12 @@ export class PixelArtAchievementsService {
           unlocked: statistics.totalPotionsCollected >= 15,
         };
 
+      case PixelArtAchievementType.POTIONS_20:
+        return {
+          progress: Math.min(statistics.totalPotionsCollected, 20),
+          unlocked: statistics.totalPotionsCollected >= 20,
+        };
+
       case PixelArtAchievementType.FIRST_STAMINA_POTION:
         return {
           progress: (statistics.totalStaminaPotionsCollected ?? 0) > 0 ? 1 : 0,
@@ -339,6 +363,12 @@ export class PixelArtAchievementsService {
         return {
           progress: Math.min(statistics.totalStaminaPotionsCollected ?? 0, 10),
           unlocked: (statistics.totalStaminaPotionsCollected ?? 0) >= 10,
+        };
+
+      case PixelArtAchievementType.STAMINA_POTIONS_20:
+        return {
+          progress: Math.min(statistics.totalStaminaPotionsCollected ?? 0, 20),
+          unlocked: (statistics.totalStaminaPotionsCollected ?? 0) >= 20,
         };
 
       case PixelArtAchievementType.FIRST_RARE_ITEM:

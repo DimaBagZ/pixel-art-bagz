@@ -1,15 +1,58 @@
 /**
  * Стили компонента WelcomeHero
+ * Sci-fi стиль без скруглений
  * БЭМ методология
  */
 
 .welcomeHero {
   padding: 60px 20px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%);
   text-align: center;
-  border-radius: 16px;
+  border: 3px solid var(--color-primary);
+  border-radius: 0;
   margin-bottom: 40px;
   animation: fadeIn 0.6s ease-out;
+  position: relative;
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.3),
+    inset 0 0 20px rgba(0, 0, 0, 0.8);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    20px 100%,
+    0 calc(100% - 20px)
+  );
+}
+
+.welcomeHero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 215, 0, 0.03) 2px,
+      rgba(255, 215, 0, 0.03) 4px
+    );
+  pointer-events: none;
+}
+
+.welcomeHero::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  pointer-events: none;
 }
 
 .welcomeHero__container {
@@ -18,12 +61,19 @@
 }
 
 .welcomeHero__title {
+  font-family: "Share Tech Mono", monospace;
   font-size: 48px;
   font-weight: 700;
-  color: var(--color-white);
+  color: var(--color-primary);
   margin: 0 0 20px 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  text-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(255, 215, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.8);
   line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  position: relative;
 }
 
 .welcomeHero__emoji {
@@ -33,23 +83,66 @@
 }
 
 .welcomeHero__subtitle {
-  font-size: 20px;
-  color: var(--color-white);
+  font-family: "Share Tech Mono", monospace;
+  font-size: 18px;
+  color: var(--color-text);
   margin: 0 0 30px 0;
-  line-height: 1.6;
-  opacity: 0.95;
+  line-height: 1.8;
+  opacity: 0.9;
+  text-align: left;
+  padding: 20px 20px 20px 40px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-left: 4px solid var(--color-primary);
+  position: relative;
+}
+
+.welcomeHero__subtitle::before {
+  content: ">";
+  position: absolute;
+  left: 12px;
+  top: 20px;
+  color: var(--color-primary);
+  font-weight: bold;
+  font-size: 20px;
+  animation: blink 1s infinite;
 }
 
 .welcomeHero__decorative {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
   margin-top: 30px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 2px solid rgba(255, 215, 0, 0.3);
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+  position: relative;
+}
+
+.welcomeHero__decorative::before,
+.welcomeHero__decorative::after {
+  content: "█";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-primary);
+  font-size: 20px;
+  animation: blink 1s infinite;
+}
+
+.welcomeHero__decorative::before {
+  left: 20px;
+}
+
+.welcomeHero__decorative::after {
+  right: 20px;
 }
 
 .welcomeHero__decorativeItem {
   font-size: 32px;
   animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
 }
 
 .welcomeHero__decorativeItem:nth-child(1) {
@@ -93,6 +186,15 @@
   }
   50% {
     transform: translateY(-15px);
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0.3;
   }
 }
 

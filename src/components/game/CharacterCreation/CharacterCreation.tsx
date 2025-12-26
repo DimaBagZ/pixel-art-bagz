@@ -15,7 +15,7 @@ import styles from "./CharacterCreation.module.css";
 
 export interface CharacterCreationProps {
   readonly isOpen: boolean;
-  readonly onComplete: (stats: PlayerStats) => void;
+  readonly onComplete: (stats: PlayerStats, characterClass: CharacterClass) => void;
   readonly onCancel?: () => void;
 }
 
@@ -30,7 +30,7 @@ interface CharacterPreset {
   readonly stats: Omit<PlayerStats, "level" | "experience" | "experienceToNextLevel">;
 }
 
-const CHARACTER_PRESETS: Record<CharacterClass, CharacterPreset> = {
+export const CHARACTER_PRESETS: Record<CharacterClass, CharacterPreset> = {
   SURVIVOR: {
     name: "Выживальщик",
     description: "Высокое здоровье и стамина. Идеально для долгих исследований.",
@@ -85,7 +85,7 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({
       experience: 0,
       experienceToNextLevel: 10,
     };
-    onComplete(stats);
+    onComplete(stats, selectedClass);
   }, [selectedClass, onComplete]);
 
   if (!isOpen) {

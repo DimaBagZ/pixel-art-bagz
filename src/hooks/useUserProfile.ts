@@ -10,6 +10,7 @@ import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
 import { userStorageService } from "@/services/storage";
 import type { UserProfile } from "@/services/storage/StorageTypes";
 import { gameStateService } from "@/services/storage/GameStateService";
+import { CHARACTER_PRESETS } from "@/components/game/CharacterCreation/CharacterCreation";
 
 export interface UseUserProfileReturn {
   readonly profile: UserProfile | null;
@@ -17,6 +18,9 @@ export interface UseUserProfileReturn {
   readonly createProfile: (data: { name: string; avatarId: AvatarId }) => void;
   readonly updateName: (name: string) => void;
   readonly updateAvatar: (avatarId: AvatarId) => void;
+  readonly updateCharacterClass: (
+    characterClass: "SURVIVOR" | "EXPLORER" | "COLLECTOR"
+  ) => void;
   readonly upgradeStamina: () => boolean; // возвращает успех (true если куплено)
   readonly getAvailableSkillPoints: () => number; // доступные очки навыков
   readonly resetProfile: () => void;
@@ -124,6 +128,19 @@ export const useUserProfile = (): UseUserProfileReturn => {
     [profile]
   );
 
+  const updateCharacterClass = useCallback(
+    (characterClass: "SURVIVOR" | "EXPLORER" | "COLLECTOR"): void => {
+      if (!profile) return;
+
+      const updated = userStorageService.updateProfile({
+        ...profile,
+        selectedCharacterClass: characterClass,
+      });
+      setProfile(updated);
+    },
+    [profile]
+  );
+
   /**
    * Получить доступные очки навыков
    * За каждые 10 уровней персонажа начисляется 10 очков
@@ -172,14 +189,33 @@ export const useUserProfile = (): UseUserProfileReturn => {
     // Обновляем maxStamina в gameState
     const gameState = gameStateService.loadGameState();
     if (gameState) {
-      const newMaxStamina = 100 + (currentUpgrades + 1) * 10; // 110, 120, 130, 140, 150
+      // Определяем базовую стамину из класса персонажа
+      let baseMaxStamina = 100; // Значение по умолчанию
+      if (updated.selectedCharacterClass) {
+        const preset = CHARACTER_PRESETS[updated.selectedCharacterClass];
+        if (preset) {
+          baseMaxStamina = preset.stats.maxStamina;
+        }
+      }
+
+      // Вычисляем новую максимальную стамину с учетом бонуса
+      const newMaxStamina = baseMaxStamina + (currentUpgrades + 1) * 10;
+      const currentStamina = gameState.player.stats.stamina;
+      const currentMaxStamina = gameState.player.stats.maxStamina;
+      const staminaDifference = newMaxStamina - currentMaxStamina;
+
+      // Сохраняем все важные флаги состояния игры
       const newGameState = {
         ...gameState,
+        isGameStarted: gameState.isGameStarted, // Сохраняем флаг запущенной игры
+        isPaused: gameState.isPaused,
         player: {
           ...gameState.player,
           stats: {
             ...gameState.player.stats,
             maxStamina: newMaxStamina,
+            // Увеличиваем текущую стамину на разницу, но не больше максимума
+            stamina: Math.min(currentStamina + staminaDifference, newMaxStamina),
           },
         },
       };
@@ -209,6 +245,7 @@ export const useUserProfile = (): UseUserProfileReturn => {
     createProfile,
     updateName,
     updateAvatar,
+    updateCharacterClass,
     upgradeStamina,
     getAvailableSkillPoints,
     resetProfile,

@@ -47,15 +47,15 @@ export default function WelcomePage() {
         {/* Если пользователь авторизован, показываем блок для авторизованных */}
         {profile ? (
           <>
+            <WelcomeAuthBlock />
             <WelcomeHero />
             <WelcomeFeatures />
-            <WelcomeAuthBlock />
           </>
         ) : (
           <>
+            <WelcomeCTA onComplete={handleComplete} />
             <WelcomeHero />
             <WelcomeFeatures />
-            <WelcomeCTA onComplete={handleComplete} />
           </>
         )}
       </div>

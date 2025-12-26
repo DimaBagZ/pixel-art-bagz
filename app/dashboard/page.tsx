@@ -124,7 +124,7 @@ export default function DashboardPage() {
             />
             <StatisticsCard
               title="Собрано зелий"
-              value={statistics.totalPotionsCollected}
+              value={statistics.totalPotionsCollected + (statistics.totalStaminaPotionsCollected ?? 0)}
               icon="🧪"
               trend="up"
             />

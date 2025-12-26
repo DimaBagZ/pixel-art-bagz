@@ -10,6 +10,8 @@ import type { UserProfile, CreateProfileData, UserSettings } from "./StorageType
 import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
 import type { AvatarId } from "@/domain/avatar/AvatarPreset";
 import { gameStateService } from "./GameStateService";
+import { pixelArtStatisticsService } from "./PixelArtStatisticsService";
+import { pixelArtAchievementsService } from "./PixelArtAchievementsService";
 
 /**
  * Сервис для управления профилем пользователя
@@ -109,16 +111,20 @@ export class UserStorageService {
   deleteAccount(): void {
     // Удаляем профиль
     this.storage.remove(STORAGE_KEYS.USER_PROFILE);
-    // Удаляем статистику
+    // Удаляем статистику крестиков-ноликов
     this.storage.remove(STORAGE_KEYS.STATISTICS);
     // Удаляем историю игр
     this.storage.remove(STORAGE_KEYS.GAME_HISTORY);
-    // Удаляем достижения
+    // Удаляем достижения крестиков-ноликов
     this.storage.remove(STORAGE_KEYS.ACHIEVEMENTS);
     // Удаляем настройки (опционально, если они привязаны к аккаунту)
     this.storage.remove(STORAGE_KEYS.SETTINGS);
     // Удаляем состояние пиксель-арт игры
     gameStateService.deleteGameState();
+    // Удаляем статистику пиксель-арт игры
+    pixelArtStatisticsService.resetStatistics();
+    // Удаляем достижения пиксель-арт игры
+    pixelArtAchievementsService.resetAchievements();
   }
 
   /**

@@ -205,6 +205,59 @@
   border-color: #dc2626;
 }
 
+/* Элемент: userProfile__characterSection */
+.userProfile__characterSection {
+  padding: 20px;
+  background: var(--color-background-light);
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+}
+
+/* Элемент: userProfile__characterTitle */
+.userProfile__characterTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 16px 0;
+}
+
+/* Элемент: userProfile__characterCard */
+.userProfile__characterCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 8px;
+}
+
+/* Элемент: userProfile__characterIcon */
+.userProfile__characterIcon {
+  font-size: 32px;
+}
+
+/* Элемент: userProfile__characterInfo */
+.userProfile__characterInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+/* Элемент: userProfile__characterName */
+.userProfile__characterName {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Элемент: userProfile__characterDesc */
+.userProfile__characterDesc {
+  font-size: 14px;
+  color: var(--color-text-light);
+}
+
 /* Элемент: userProfile__upgradeSection */
 .userProfile__upgradeSection {
   padding: 20px;
@@ -226,7 +279,11 @@
   align-items: center;
   gap: 8px;
   padding: 16px;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 165, 0, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.15) 0%,
+    rgba(255, 165, 0, 0.1) 100%
+  );
   border: 2px solid var(--color-primary);
   border-radius: 8px;
   margin-bottom: 16px;
@@ -369,4 +426,3 @@
     padding: 16px;
   }
 }
-
