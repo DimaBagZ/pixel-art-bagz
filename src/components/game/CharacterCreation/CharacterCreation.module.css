@@ -5,8 +5,11 @@
 
 .characterCreationModal {
   max-width: 800px !important;
+  max-height: 90vh !important;
   padding: 0 !important;
   background: transparent !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
 .characterCreation {
@@ -20,6 +23,7 @@
   display: flex;
   flex-direction: column;
   min-height: auto;
+  box-sizing: border-box;
 }
 
 .characterCreation__title {
@@ -38,18 +42,19 @@
   font-size: 16px;
   color: var(--color-text-muted);
   text-align: center;
-  margin: 0 0 30px 0;
+  margin: 0 0 20px 0;
 }
 
 .characterCreation__classes {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .characterCreation__class {
-  padding: 20px;
+  padding: 15px;
   background: var(--color-background);
   border: 2px solid var(--color-border);
   cursor: pointer;
@@ -117,9 +122,14 @@
   justify-content: space-between;
   align-items: center;
   gap: 15px;
-  margin-top: 30px;
-  position: relative;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  position: sticky;
+  bottom: 0;
+  background: var(--color-surface);
   z-index: 10;
+  flex-shrink: 0;
 }
 
 .characterCreation__profileLink {
@@ -132,36 +142,85 @@
   margin-left: auto;
 }
 
-.characterCreationModal {
-  max-width: 800px !important;
-  padding: 0 !important;
-  background: transparent !important;
-  overflow: visible !important;
-}
 
 /* Адаптивность */
 @media (max-width: 768px) {
+  .characterCreationModal {
+    max-width: 95% !important;
+    max-height: 95vh !important;
+  }
+
   .characterCreation {
-    padding: 20px;
+    padding: 15px;
+  }
+
+  .characterCreation__title {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .characterCreation__subtitle {
+    font-size: 14px;
+    margin-bottom: 15px;
   }
 
   .characterCreation__classes {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+
+  .characterCreation__class {
+    padding: 12px;
+  }
+
+  .characterCreation__className {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .characterCreation__classDescription {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+
+  .characterCreation__stats {
+    margin-top: 12px;
+    padding-top: 12px;
+    gap: 6px;
   }
 
   .characterCreation__actions {
     flex-direction: column;
+    margin-top: 15px;
+    padding-top: 15px;
+    gap: 10px;
   }
 
   .characterCreation__actionsRight {
     width: 100%;
     flex-direction: column;
     margin-left: 0;
+    gap: 10px;
   }
 
   .characterCreation__actions button,
   .characterCreation__profileLink {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .characterCreation {
+    padding: 12px;
+  }
+
+  .characterCreation__title {
+    font-size: 20px;
+  }
+
+  .characterCreation__subtitle {
+    font-size: 13px;
   }
 }
 
