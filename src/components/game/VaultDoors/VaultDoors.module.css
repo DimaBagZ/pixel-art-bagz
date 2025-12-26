@@ -16,6 +16,13 @@
   pointer-events: none;
 }
 
+/* Когда ворота закрыты, кнопка должна быть всегда видна и кликабельна */
+/* Но когда модальное окно открыто, кнопка должна быть ниже него */
+.vaultDoors:not(.vaultDoors--open) .vaultDoors__centerNut {
+  pointer-events: auto;
+  z-index: 1001;
+}
+
 .vaultDoorPanel {
   position: absolute;
   top: 0;

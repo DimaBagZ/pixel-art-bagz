@@ -1,7 +1,7 @@
 /**
  * Хук для игрового цикла
  * Управляет обновлением игры через requestAnimationFrame
- * Соблюдает принцип Single Responsibility
+ * Оптимизирован для стабильной работы без мерцания
  */
 
 import { useEffect, useRef, useCallback } from "react";
@@ -9,7 +9,7 @@ import { useEffect, useRef, useCallback } from "react";
 export interface UseGameLoopOptions {
   readonly enabled?: boolean;
   readonly onUpdate: (deltaTime: number) => void;
-  readonly fps?: number; // Ограничение FPS (опционально)
+  readonly fps?: number;
 }
 
 export interface UseGameLoopReturn {
@@ -25,42 +25,65 @@ export interface UseGameLoopReturn {
  */
 export const useGameLoop = (options: UseGameLoopOptions): UseGameLoopReturn => {
   const { enabled = true, onUpdate, fps } = options;
+  
   const animationFrameRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(false);
   const isRunningRef = useRef<boolean>(false);
+  const enabledRef = useRef(enabled);
+  const fpsRef = useRef(fps);
+  
+  // Сохраняем onUpdate в ref чтобы избежать пересоздания gameLoop
+  const onUpdateRef = useRef(onUpdate);
+  
+  // Обновляем refs при изменении пропсов
+  useEffect(() => {
+    onUpdateRef.current = onUpdate;
+  }, [onUpdate]);
+  
+  useEffect(() => {
+    enabledRef.current = enabled;
+  }, [enabled]);
+  
+  useEffect(() => {
+    fpsRef.current = fps;
+  }, [fps]);
 
   /**
-   * Игровой цикл
+   * Игровой цикл (стабильный, не пересоздаётся)
    */
-  const gameLoop = useCallback(
-    (currentTime: number): void => {
-      if (!enabled || isPausedRef.current) {
-        return;
+  const gameLoop = useCallback((currentTime: number): void => {
+    if (!enabledRef.current || isPausedRef.current || !isRunningRef.current) {
+      return;
+    }
+
+    // Расчет deltaTime
+    let deltaTime = 0;
+    if (lastTimeRef.current !== null) {
+      deltaTime = (currentTime - lastTimeRef.current) / 1000;
+      
+      // Защита от слишком больших deltaTime (например после паузы)
+      if (deltaTime > 0.1) {
+        deltaTime = 0.016; // ~60fps
       }
+    }
+    lastTimeRef.current = currentTime;
 
-      // Расчет deltaTime
-      const deltaTime =
-        lastTimeRef.current !== null
-          ? (currentTime - lastTimeRef.current) / 1000 // в секундах
-          : 0;
-
-      lastTimeRef.current = currentTime;
-
-      // Ограничение FPS
-      if (fps && deltaTime < 1 / fps) {
-        animationFrameRef.current = requestAnimationFrame(gameLoop);
-        return;
-      }
-
-      // Обновление игры
-      onUpdate(deltaTime);
-
-      // Следующий кадр
+    // Ограничение FPS
+    const currentFps = fpsRef.current;
+    if (currentFps && deltaTime > 0 && deltaTime < 1 / currentFps) {
       animationFrameRef.current = requestAnimationFrame(gameLoop);
-    },
-    [enabled, onUpdate, fps]
-  );
+      return;
+    }
+
+    // Обновление игры через ref
+    if (onUpdateRef.current && deltaTime > 0) {
+      onUpdateRef.current(deltaTime);
+    }
+
+    // Следующий кадр
+    animationFrameRef.current = requestAnimationFrame(gameLoop);
+  }, []); // Пустые зависимости - функция стабильная
 
   /**
    * Запуск игрового цикла
@@ -105,15 +128,19 @@ export const useGameLoop = (options: UseGameLoopOptions): UseGameLoopReturn => {
       return;
     }
     isPausedRef.current = false;
-    lastTimeRef.current = null; // Сброс времени для избежания большого deltaTime
+    lastTimeRef.current = null;
   }, [start]);
 
-  // Автозапуск при включении
+  // Автозапуск/остановка при изменении enabled
   useEffect(() => {
-    if (enabled && !isRunningRef.current) {
-      start();
-    } else if (!enabled && isRunningRef.current) {
-      stop();
+    if (enabled) {
+      if (!isRunningRef.current) {
+        start();
+      }
+    } else {
+      if (isRunningRef.current) {
+        stop();
+      }
     }
 
     return () => {
@@ -129,4 +156,3 @@ export const useGameLoop = (options: UseGameLoopOptions): UseGameLoopReturn => {
     resume,
   };
 };
-

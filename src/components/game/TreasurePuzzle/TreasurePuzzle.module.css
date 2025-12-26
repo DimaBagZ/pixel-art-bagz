@@ -1,0 +1,371 @@
+/**
+ * Стили для ребуса сокровищницы
+ * Золотисто-бронзовый стиль
+ */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.puzzle {
+  position: relative;
+  width: 90%;
+  max-width: 450px;
+  background: linear-gradient(180deg, #2a1f0a 0%, #1a1205 100%);
+  border: 4px solid #ffa500;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 
+    0 0 60px rgba(255, 165, 0, 0.4),
+    0 0 100px rgba(255, 165, 0, 0.2),
+    inset 0 0 40px rgba(0, 0, 0, 0.5);
+  animation: puzzleAppear 0.5s ease-out;
+}
+
+@keyframes puzzleAppear {
+  from {
+    transform: scale(0.8) rotateX(10deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) rotateX(0);
+    opacity: 1;
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.solved {
+  border-color: #00ff88;
+  box-shadow: 
+    0 0 80px rgba(0, 255, 136, 0.6),
+    0 0 120px rgba(0, 255, 136, 0.3),
+    inset 0 0 40px rgba(0, 0, 0, 0.5);
+  animation: solvedGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes solvedGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 80px rgba(0, 255, 136, 0.6),
+      0 0 120px rgba(0, 255, 136, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 0 100px rgba(0, 255, 136, 0.8),
+      0 0 150px rgba(0, 255, 136, 0.5);
+  }
+}
+
+/* Декоративные углы */
+.cornerTL, .cornerTR, .cornerBL, .cornerBR {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #ffd700;
+  border-style: solid;
+}
+
+.cornerTL {
+  top: 8px;
+  left: 8px;
+  border-width: 3px 0 0 3px;
+}
+
+.cornerTR {
+  top: 8px;
+  right: 8px;
+  border-width: 3px 3px 0 0;
+}
+
+.cornerBL {
+  bottom: 8px;
+  left: 8px;
+  border-width: 0 0 3px 3px;
+}
+
+.cornerBR {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 3px 3px 0;
+}
+
+/* Заголовок */
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.lockIcon {
+  font-size: 48px;
+  margin-bottom: 10px;
+  animation: lockPulse 2s ease-in-out infinite;
+}
+
+@keyframes lockPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px rgba(255, 165, 0, 0.8));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 20px rgba(255, 165, 0, 1));
+  }
+}
+
+.title {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #cc9900;
+  margin-top: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Вопрос */
+.questionBox {
+  background: rgba(255, 165, 0, 0.1);
+  border: 2px solid rgba(255, 165, 0, 0.4);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.questionIcon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.question {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 16px;
+  color: #ffe4aa;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Поле ввода */
+.inputBox {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.input {
+  flex: 1;
+  padding: 15px 20px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 18px;
+  color: #ffd700;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #cc8800;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input::placeholder {
+  color: #886600;
+}
+
+.input:focus {
+  border-color: #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.submitButton {
+  width: 60px;
+  font-size: 24px;
+  color: #1a1205;
+  background: linear-gradient(180deg, #ffd700 0%, #cc9900 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 0 #886600;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #886600, 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #886600;
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Подсказка */
+.hintSection {
+  min-height: 40px;
+  margin-bottom: 20px;
+}
+
+.hintButton {
+  width: 100%;
+  padding: 10px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 12px;
+  color: #cc9900;
+  background: transparent;
+  border: 1px dashed #886600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hintButton:hover {
+  color: #ffd700;
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 6px;
+  animation: hintReveal 0.3s ease-out;
+}
+
+@keyframes hintReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hintIcon {
+  font-size: 20px;
+}
+
+.hintText {
+  font-size: 13px;
+  color: #ffe4aa;
+  font-style: italic;
+}
+
+/* Успех */
+.successContent {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.successIcon {
+  font-size: 72px;
+  margin-bottom: 15px;
+  animation: successSpin 1s ease-out;
+}
+
+@keyframes successSpin {
+  from {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.successText {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 18px;
+  color: #00ff88;
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+  margin: 0;
+}
+
+/* Кнопка закрытия */
+.closeButton {
+  width: 100%;
+  padding: 12px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #cc9900;
+  background: transparent;
+  border: 2px solid #886600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 2px;
+}
+
+.closeButton:hover {
+  color: #ffd700;
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+}
+
+/* Адаптивность */
+@media (max-width: 500px) {
+  .puzzle {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .question {
+    font-size: 14px;
+  }
+
+  .input {
+    font-size: 16px;
+    padding: 12px 15px;
+  }
+}
+

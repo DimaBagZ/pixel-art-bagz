@@ -11,6 +11,7 @@ import { GAME_CONFIG } from "@/utils/pixel-art-constants";
 export const ITEM_TYPES = {
   COIN: ItemType.COIN,
   POTION: ItemType.POTION,
+  STAMINA_POTION: ItemType.STAMINA_POTION,
   RARE_ITEM: ItemType.RARE_ITEM,
 } as const;
 
@@ -19,7 +20,8 @@ export const ITEM_TYPES = {
  */
 export const ITEM_XP_VALUES: Record<ItemType, number> = {
   [ItemType.COIN]: GAME_CONFIG.COIN_XP_VALUE,
-  [ItemType.POTION]: 0, // Зелья не дают XP
+  [ItemType.POTION]: 0,
+  [ItemType.STAMINA_POTION]: 0,
   [ItemType.RARE_ITEM]: GAME_CONFIG.RARE_ITEM_XP_VALUE,
 } as const;
 
@@ -27,6 +29,11 @@ export const ITEM_XP_VALUES: Record<ItemType, number> = {
  * Восстановление здоровья для зелий
  */
 export const POTION_HEALTH_RESTORE = GAME_CONFIG.POTION_HEALTH_RESTORE;
+
+/**
+ * Восстановление стамины для зелий
+ */
+export const STAMINA_POTION_RESTORE = 50; // 50% стамины
 
 /**
  * Проверка, дает ли предмет опыт
@@ -43,9 +50,15 @@ export function restoresHealth(itemType: ItemType): boolean {
 }
 
 /**
+ * Проверка, восстанавливает ли предмет стамину
+ */
+export function restoresStamina(itemType: ItemType): boolean {
+  return itemType === ItemType.STAMINA_POTION;
+}
+
+/**
  * Проверка, идет ли предмет в инвентарь
  */
 export function goesToInventory(itemType: ItemType): boolean {
   return itemType === ItemType.RARE_ITEM;
 }
-

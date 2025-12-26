@@ -1,10 +1,10 @@
 /**
  * Хук для обработки клавиатуры
  * Обрабатывает WASD, стрелки и Shift для бега
- * Соблюдает принцип Single Responsibility
+ * Поддерживает русскую раскладку (ЦФЫВ)
  */
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import type { Direction, MovementType } from "@/types/pixel-art-game.types";
 import {
   Direction as DirectionEnum,
@@ -28,68 +28,72 @@ export interface UseKeyboardReturn {
   readonly isEnabled: boolean;
 }
 
+// Маппинг клавиш на направления (поддержка EN и RU раскладок)
+const KEY_TO_DIRECTION: Record<string, Direction> = {
+  // Английская раскладка
+  w: DirectionEnum.UP,
+  a: DirectionEnum.LEFT,
+  s: DirectionEnum.DOWN,
+  d: DirectionEnum.RIGHT,
+  // Русская раскладка (ЦФЫВ)
+  ц: DirectionEnum.UP,
+  ф: DirectionEnum.LEFT,
+  ы: DirectionEnum.DOWN,
+  в: DirectionEnum.RIGHT,
+  // Стрелки
+  arrowup: DirectionEnum.UP,
+  arrowleft: DirectionEnum.LEFT,
+  arrowdown: DirectionEnum.DOWN,
+  arrowright: DirectionEnum.RIGHT,
+};
+
+// Все игровые клавиши для preventDefault
+const GAME_KEYS = new Set([
+  "w", "a", "s", "d",
+  "ц", "ф", "ы", "в",
+  "arrowup", "arrowdown", "arrowleft", "arrowright",
+  "shift",
+]);
+
 /**
  * Хук для обработки клавиатуры
  */
 export const useKeyboard = (options?: UseKeyboardOptions): UseKeyboardReturn => {
   const enabled = options?.enabled ?? true;
-  const [keyboardState, setKeyboardState] = useState<KeyboardState>({
+
+  const keysPressedRef = useRef<Set<string>>(new Set());
+  const keyboardStateRef = useRef<KeyboardState>({
     direction: null,
     movementType: MovementTypeEnum.IDLE,
     isMoving: false,
   });
 
-  const keysPressedRef = useRef<Set<string>>(new Set());
-  const lastDirectionRef = useRef<Direction | null>(null);
+  const onMoveRef = useRef(options?.onMove);
+  const onStopRef = useRef(options?.onStop);
+  const enabledRef = useRef(enabled);
+
+  useEffect(() => {
+    onMoveRef.current = options?.onMove;
+    onStopRef.current = options?.onStop;
+    enabledRef.current = enabled;
+  }, [options?.onMove, options?.onStop, enabled]);
 
   /**
-   * Обработка нажатия клавиши
+   * Получить направление из нажатых клавиш
    */
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent): void => {
-      if (!enabled) {
-        return;
+  const getDirectionFromKeys = useCallback((): Direction | null => {
+    const keys = keysPressedRef.current;
+    
+    // Проверяем все клавиши в порядке приоритета
+    for (const key of keys) {
+      const direction = KEY_TO_DIRECTION[key];
+      if (direction) {
+        return direction;
       }
-
-      const key = event.key.toLowerCase();
-      keysPressedRef.current.add(key);
-
-      // Предотвращение стандартного поведения для игровых клавиш
-      if (
-        key === "w" ||
-        key === "a" ||
-        key === "s" ||
-        key === "d" ||
-        key === "arrowup" ||
-        key === "arrowdown" ||
-        key === "arrowleft" ||
-        key === "arrowright" ||
-        key === "shift"
-      ) {
-        event.preventDefault();
-      }
-
-      updateKeyboardState();
-    },
-    [enabled, options]
-  );
-
-  /**
-   * Обработка отпускания клавиши
-   */
-  const handleKeyUp = useCallback(
-    (event: KeyboardEvent): void => {
-      if (!enabled) {
-        return;
-      }
-
-      const key = event.key.toLowerCase();
-      keysPressedRef.current.delete(key);
-
-      updateKeyboardState();
-    },
-    [enabled, options]
-  );
+    }
+    
+    return null;
+  }, []);
 
   /**
    * Обновление состояния клавиатуры
@@ -97,74 +101,108 @@ export const useKeyboard = (options?: UseKeyboardOptions): UseKeyboardReturn => 
   const updateKeyboardState = useCallback((): void => {
     const keys = keysPressedRef.current;
     const isShiftPressed = keys.has("shift");
+    
+    const direction = getDirectionFromKeys();
+    const isMoving = direction !== null;
+    const prevDirection = keyboardStateRef.current.direction;
 
-    // Определение направления
-    let direction: Direction | null = null;
-
-    if (keys.has("w") || keys.has("arrowup")) {
-      direction = DirectionEnum.UP;
-    } else if (keys.has("s") || keys.has("arrowdown")) {
-      direction = DirectionEnum.DOWN;
-    } else if (keys.has("a") || keys.has("arrowleft")) {
-      direction = DirectionEnum.LEFT;
-    } else if (keys.has("d") || keys.has("arrowright")) {
-      direction = DirectionEnum.RIGHT;
-    }
-
-    // Определение типа движения
     const movementType: MovementType =
       direction && isShiftPressed ? MovementTypeEnum.RUN : MovementTypeEnum.WALK;
 
-    const isMoving = direction !== null;
-
-    // Обновление состояния
-    const newState: KeyboardState = {
+    keyboardStateRef.current = {
       direction,
       movementType: isMoving ? movementType : MovementTypeEnum.IDLE,
       isMoving,
     };
 
-    setKeyboardState(newState);
-
     // Вызов колбэков
-    if (isMoving && direction && options?.onMove) {
-      options.onMove(direction, movementType);
-      lastDirectionRef.current = direction;
-    } else if (!isMoving && options?.onStop) {
-      options.onStop();
-      lastDirectionRef.current = null;
+    if (isMoving && direction && onMoveRef.current) {
+      onMoveRef.current(direction, movementType);
+    } else if (!isMoving && prevDirection !== null && onStopRef.current) {
+      onStopRef.current();
     }
-  }, [options]);
+  }, [getDirectionFromKeys]);
 
-  // Установка обработчиков событий
+  /**
+   * Обработка нажатия клавиши
+   */
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent): void => {
+      const key = event.key.toLowerCase();
+
+      // СНАЧАЛА блокируем стандартное поведение для игровых клавиш
+      if (GAME_KEYS.has(key)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      // Если хук отключен - выходим после preventDefault
+      if (!enabledRef.current) {
+        return;
+      }
+
+      // Избегаем повторных событий при зажатии
+      if (keysPressedRef.current.has(key)) {
+        return;
+      }
+
+      keysPressedRef.current.add(key);
+      updateKeyboardState();
+    },
+    [updateKeyboardState]
+  );
+
+  /**
+   * Обработка отпускания клавиши
+   */
+  const handleKeyUp = useCallback(
+    (event: KeyboardEvent): void => {
+      const key = event.key.toLowerCase();
+
+      // Блокируем стандартное поведение
+      if (GAME_KEYS.has(key)) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      if (!enabledRef.current) {
+        return;
+      }
+
+      keysPressedRef.current.delete(key);
+      updateKeyboardState();
+    },
+    [updateKeyboardState]
+  );
+
+  // Установка обработчиков
   useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("keydown", handleKeyDown, { capture: true });
+    window.addEventListener("keyup", handleKeyUp, { capture: true });
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown, { capture: true });
+      window.removeEventListener("keyup", handleKeyUp, { capture: true });
     };
-  }, [enabled, handleKeyDown, handleKeyUp]);
+  }, [handleKeyDown, handleKeyUp]);
 
   // Очистка при отключении
   useEffect(() => {
     if (!enabled) {
       keysPressedRef.current.clear();
-      setKeyboardState({
+      keyboardStateRef.current = {
         direction: null,
         movementType: MovementTypeEnum.IDLE,
         isMoving: false,
-      });
+      };
+      if (onStopRef.current) {
+        onStopRef.current();
+      }
     }
   }, [enabled]);
 
   return {
-    keyboardState,
+    keyboardState: keyboardStateRef.current,
     isEnabled: enabled,
   };
 };

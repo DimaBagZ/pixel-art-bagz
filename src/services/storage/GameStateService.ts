@@ -1,7 +1,6 @@
 /**
  * Сервис для сохранения и загрузки состояния игры
- * Соблюдает принцип Single Responsibility
- * Строгая типизация без использования any
+ * Поддерживает миграцию старых сохранений
  */
 
 import { StorageService } from "./StorageService";
@@ -38,10 +37,6 @@ export class GameStateService {
         savedState
       );
 
-      if (success) {
-        console.log("Состояние игры сохранено");
-      }
-
       return success;
     } catch (error) {
       console.error("Ошибка сохранения состояния игры:", error);
@@ -65,14 +60,17 @@ export class GameStateService {
       // Проверка версии сохранения
       if (savedState.version !== GAME_CONFIG.SAVE_VERSION) {
         console.warn(
-          `Версия сохранения (${savedState.version}) не совпадает с текущей (${GAME_CONFIG.SAVE_VERSION}). Возможны проблемы совместимости.`
+          `Версия сохранения (${savedState.version}) не совпадает с текущей (${GAME_CONFIG.SAVE_VERSION}). Удаляем старое сохранение.`
         );
-        // В будущем здесь можно добавить миграции
+        // Удаляем старое несовместимое сохранение
+        this.deleteGameState();
+        return null;
       }
 
       // Валидация сохраненного состояния
       if (!this.validateGameState(savedState.gameState)) {
-        console.error("Сохраненное состояние игры невалидно");
+        console.warn("Сохраненное состояние игры невалидно. Удаляем.");
+        this.deleteGameState();
         return null;
       }
 
@@ -96,9 +94,6 @@ export class GameStateService {
   deleteGameState(): boolean {
     try {
       const success = this.storage.remove(STORAGE_KEYS.PIXEL_ART_GAME_STATE);
-      if (success) {
-        console.log("Сохраненное состояние игры удалено");
-      }
       return success;
     } catch (error) {
       console.error("Ошибка удаления состояния игры:", error);
@@ -107,7 +102,7 @@ export class GameStateService {
   }
 
   /**
-   * Валидация состояния игры
+   * Валидация состояния игры (DOOM-style с пиксельными координатами)
    */
   private validateGameState(gameState: GameState): boolean {
     try {
@@ -121,13 +116,21 @@ export class GameStateService {
         return false;
       }
 
-      // Проверка позиции игрока
+      // Проверка позиции игрока (теперь в пикселях)
+      const maxX = gameState.map.width * GAME_CONFIG.TILE_SIZE;
+      const maxY = gameState.map.height * GAME_CONFIG.TILE_SIZE;
+
       if (
         gameState.player.position.x < 0 ||
-        gameState.player.position.x >= gameState.map.width ||
+        gameState.player.position.x >= maxX ||
         gameState.player.position.y < 0 ||
-        gameState.player.position.y >= gameState.map.height
+        gameState.player.position.y >= maxY
       ) {
+        return false;
+      }
+
+      // Проверка наличия новых полей (angle, velocity)
+      if (typeof gameState.player.angle !== "number" || !gameState.player.velocity) {
         return false;
       }
 
@@ -154,7 +157,7 @@ export class GameStateService {
   }
 
   /**
-   * Получить метаданные сохранения (версия, время)
+   * Получить метаданные сохранения
    */
   getSaveMetadata(): { version: number; timestamp: number } | null {
     const savedState = this.storage.get<SavedGameState>(

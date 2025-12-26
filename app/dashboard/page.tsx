@@ -17,7 +17,6 @@ import { PixelArtAchievements } from "@/components/dashboard/Achievements/PixelA
 import { UserAvatar } from "@/components/user/UserAvatar";
 import { Button } from "@/components/ui/Button";
 import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
-import { useEffect, useRef } from "react";
 import styles from "./page.module.css";
 
 /**

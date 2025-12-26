@@ -4,19 +4,26 @@
  */
 
 .statisticsCard {
-  background: var(--color-white);
-  border-radius: 12px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 8px var(--color-shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.5),
+    inset 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  font-family: "Share Tech Mono", monospace;
 }
 
 .statisticsCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--color-shadow);
+  border-color: var(--color-primary);
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.4),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .statisticsCard__header {
@@ -33,21 +40,25 @@
 .statisticsCard__title {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-light);
+  color: var(--color-text);
   margin: 0;
+  font-family: "Share Tech Mono", monospace;
 }
 
 .statisticsCard__value {
   font-size: 32px;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-primary);
   line-height: 1.2;
+  font-family: "Orbitron", sans-serif;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .statisticsCard__subtitle {
   font-size: 12px;
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
   margin-top: -4px;
+  font-family: "Share Tech Mono", monospace;
 }
 
 /* Модификаторы тренда */
@@ -55,8 +66,22 @@
   border-left: 4px solid var(--color-success);
 }
 
+.statisticsCard--trend-up:hover {
+  border-color: var(--color-success);
+  box-shadow: 
+    0 0 20px rgba(0, 255, 0, 0.4),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 .statisticsCard--trend-down {
   border-left: 4px solid var(--color-error);
+}
+
+.statisticsCard--trend-down:hover {
+  border-color: var(--color-error);
+  box-shadow: 
+    0 0 20px rgba(255, 68, 68, 0.4),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Адаптивность */

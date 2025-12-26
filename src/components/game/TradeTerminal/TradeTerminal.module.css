@@ -1,0 +1,353 @@
+/**
+ * Стили для торгового терминала
+ * Sci-fi терминальный стиль
+ */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.terminal {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  background: linear-gradient(180deg, #0a2a1a 0%, #051510 100%);
+  border: 3px solid #00ff88;
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 255, 136, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.5);
+  animation: terminalAppear 0.4s ease-out;
+}
+
+@keyframes terminalAppear {
+  from {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Заголовок */
+.header {
+  position: relative;
+  padding: 20px;
+  background: linear-gradient(180deg, #0d3d2a 0%, #0a2a1a 100%);
+  border-bottom: 2px solid #00ff88;
+  text-align: center;
+}
+
+.headerGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center top,
+    rgba(0, 255, 136, 0.2) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.headerIcon {
+  font-size: 24px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.title {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+  margin: 0;
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #88ffbb;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
+/* Уведомление о продаже */
+.soldNotification {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  animation: soldPop 1.5s ease-out forwards;
+}
+
+@keyframes soldPop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-50%, -100%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -150%) scale(1);
+    opacity: 0;
+  }
+}
+
+.soldXP {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 36px;
+  font-weight: 700;
+  color: #00ff88;
+  text-shadow: 0 0 20px rgba(0, 255, 136, 1), 0 0 40px rgba(0, 255, 136, 0.8);
+}
+
+/* Список предметов */
+.itemsList {
+  padding: 20px;
+  max-height: 250px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.itemsList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.itemsList::-webkit-scrollbar-track {
+  background: #051510;
+}
+
+.itemsList::-webkit-scrollbar-thumb {
+  background: #00ff88;
+  border-radius: 4px;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 30px;
+  color: #88ffbb;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.emptyHint {
+  font-size: 12px;
+  color: #55aa77;
+  margin-top: 5px;
+}
+
+/* Строка предмета */
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 15px;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.itemRow:hover {
+  background: rgba(0, 255, 136, 0.2);
+  border-color: #00ff88;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.itemInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.itemIcon {
+  font-size: 24px;
+}
+
+.itemName {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 14px;
+  color: #ccffee;
+}
+
+.itemPrice {
+  padding: 5px 12px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+}
+
+.xpValue {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffdd00;
+  text-shadow: 0 0 10px rgba(255, 221, 0, 0.5);
+}
+
+.sellButton {
+  padding: 8px 16px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #001100;
+  background: linear-gradient(180deg, #00ff88 0%, #00cc66 100%);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 0 #008844;
+}
+
+.sellButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 #008844, 0 0 15px rgba(0, 255, 136, 0.5);
+}
+
+.sellButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 #008844;
+}
+
+/* Прайс-лист */
+.priceList {
+  padding: 15px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.priceListTitle {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 12px;
+  color: #88ffbb;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.priceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.priceItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #aaffcc;
+}
+
+.priceName {
+  flex: 1;
+  opacity: 0.8;
+}
+
+.priceValue {
+  font-weight: 700;
+  color: #ffdd00;
+}
+
+/* Кнопка закрытия */
+.closeButton {
+  width: 100%;
+  padding: 15px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #00ff88;
+  background: transparent;
+  border: none;
+  border-top: 2px solid #00ff88;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 2px;
+}
+
+.closeButton:hover {
+  background: rgba(0, 255, 136, 0.2);
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+}
+
+/* Адаптивность */
+@media (max-width: 500px) {
+  .terminal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .title {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+
+  .itemRow {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .itemInfo {
+    width: 100%;
+  }
+
+  .priceGrid {
+    grid-template-columns: 1fr;
+  }
+}

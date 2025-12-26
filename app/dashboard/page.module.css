@@ -6,7 +6,8 @@
 .main {
   min-height: 100vh;
   padding: 24px;
-  background: linear-gradient(135deg, var(--color-background), var(--color-accent));
+  background: var(--color-background);
+  font-family: "Share Tech Mono", monospace;
 }
 
 .container {
@@ -20,10 +21,13 @@
 
 /* Блок: header */
 .header {
-  background: var(--color-white);
-  border-radius: 12px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
   padding: 24px;
-  box-shadow: 0 2px 8px var(--color-shadow);
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.3),
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -45,14 +49,17 @@
 .header__userName {
   font-size: 28px;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-primary);
   margin: 0;
+  font-family: "Orbitron", sans-serif;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .header__userSubtitle {
   font-size: 14px;
-  color: var(--color-text-light);
+  color: var(--color-text);
   margin: 0;
+  font-family: "Share Tech Mono", monospace;
 }
 
 .header__actions {
@@ -75,8 +82,12 @@
 .section__title {
   font-size: 24px;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--color-primary);
   margin: 0;
+  font-family: "Orbitron", sans-serif;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 8px;
 }
 
 /* Блок: statisticsGrid */

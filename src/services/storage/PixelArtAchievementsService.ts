@@ -54,7 +54,7 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
   {
     id: PixelArtAchievementType.FIRST_POTION,
     name: "Первое зелье",
-    description: "Соберите свое первое зелье",
+    description: "Соберите своё первое зелье здоровья",
     icon: "🧪",
     unlockedAt: null,
     progress: 0,
@@ -63,7 +63,7 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
   {
     id: PixelArtAchievementType.POTIONS_5,
     name: "Алхимик-новичок",
-    description: "Соберите 5 зелий",
+    description: "Соберите 5 зелий здоровья",
     icon: "⚗️",
     unlockedAt: null,
     progress: 0,
@@ -72,11 +72,29 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
   {
     id: PixelArtAchievementType.POTIONS_15,
     name: "Мастер алхимии",
-    description: "Соберите 15 зелий",
+    description: "Соберите 15 зелий здоровья",
     icon: "🔮",
     unlockedAt: null,
     progress: 0,
     maxProgress: 15,
+  },
+  {
+    id: PixelArtAchievementType.FIRST_STAMINA_POTION,
+    name: "Энергетик",
+    description: "Соберите своё первое зелье стамины",
+    icon: "💚",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 1,
+  },
+  {
+    id: PixelArtAchievementType.STAMINA_POTIONS_10,
+    name: "Марафонец",
+    description: "Соберите 10 зелий стамины",
+    icon: "🏃",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 10,
   },
   {
     id: PixelArtAchievementType.FIRST_RARE_ITEM,
@@ -90,16 +108,16 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
   {
     id: PixelArtAchievementType.ALL_RARE_ITEMS,
     name: "Полная коллекция",
-    description: "Соберите все редкие предметы",
+    description: "Соберите 10 редких предметов",
     icon: "🏆",
     unlockedAt: null,
     progress: 0,
-    maxProgress: 5,
+    maxProgress: 10,
   },
   {
     id: PixelArtAchievementType.LEVEL_2,
     name: "Первый уровень",
-    description: "Достигните уровня 2",
+    description: "Достигните 2 уровня персонажа",
     icon: "📈",
     unlockedAt: null,
     progress: 0,
@@ -107,8 +125,8 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
   },
   {
     id: PixelArtAchievementType.LEVEL_5,
-    name: "Опытный исследователь",
-    description: "Достигните уровня 5",
+    name: "Опытный",
+    description: "Достигните 5 уровня персонажа",
     icon: "🌟",
     unlockedAt: null,
     progress: 0,
@@ -116,9 +134,36 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
   },
   {
     id: PixelArtAchievementType.LEVEL_10,
-    name: "Легенда бункера",
-    description: "Достигните уровня 10",
+    name: "Ветеран",
+    description: "Достигните 10 уровня персонажа",
     icon: "👑",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 10,
+  },
+  {
+    id: PixelArtAchievementType.FLOOR_3,
+    name: "Исследователь",
+    description: "Доберитесь до 3-го этажа",
+    icon: "🚪",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 3,
+  },
+  {
+    id: PixelArtAchievementType.FLOOR_5,
+    name: "Глубокий спуск",
+    description: "Доберитесь до 5-го этажа",
+    icon: "⬇️",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 5,
+  },
+  {
+    id: PixelArtAchievementType.FLOOR_10,
+    name: "Легенда бункера",
+    description: "Доберитесь до 10-го этажа",
+    icon: "🏛️",
     unlockedAt: null,
     progress: 0,
     maxProgress: 10,
@@ -149,6 +194,24 @@ const ACHIEVEMENT_DEFINITIONS: readonly PixelArtAchievement[] = [
     unlockedAt: null,
     progress: 0,
     maxProgress: 10,
+  },
+  {
+    id: PixelArtAchievementType.TRADER,
+    name: "Торговец",
+    description: "Продайте 10 предметов на терминале",
+    icon: "💱",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 10,
+  },
+  {
+    id: PixelArtAchievementType.TREASURE_HUNTER,
+    name: "Охотник за сокровищами",
+    description: "Откройте 3 сокровищницы",
+    icon: "🔐",
+    unlockedAt: null,
+    progress: 0,
+    maxProgress: 3,
   },
 ] as const;
 
@@ -266,6 +329,18 @@ export class PixelArtAchievementsService {
           unlocked: statistics.totalPotionsCollected >= 15,
         };
 
+      case PixelArtAchievementType.FIRST_STAMINA_POTION:
+        return {
+          progress: (statistics.totalStaminaPotionsCollected ?? 0) > 0 ? 1 : 0,
+          unlocked: (statistics.totalStaminaPotionsCollected ?? 0) >= 1,
+        };
+
+      case PixelArtAchievementType.STAMINA_POTIONS_10:
+        return {
+          progress: Math.min(statistics.totalStaminaPotionsCollected ?? 0, 10),
+          unlocked: (statistics.totalStaminaPotionsCollected ?? 0) >= 10,
+        };
+
       case PixelArtAchievementType.FIRST_RARE_ITEM:
         return {
           progress: statistics.totalRareItemsCollected > 0 ? 1 : 0,
@@ -274,26 +349,44 @@ export class PixelArtAchievementsService {
 
       case PixelArtAchievementType.ALL_RARE_ITEMS:
         return {
-          progress: Math.min(statistics.totalRareItemsCollected, 5),
-          unlocked: statistics.totalRareItemsCollected >= 5,
+          progress: Math.min(statistics.totalRareItemsCollected, 10),
+          unlocked: statistics.totalRareItemsCollected >= 10,
         };
 
       case PixelArtAchievementType.LEVEL_2:
         return {
-          progress: Math.min(statistics.currentLevel, 2),
-          unlocked: statistics.currentLevel >= 2,
+          progress: Math.min(gameState.player.stats.level, 2),
+          unlocked: gameState.player.stats.level >= 2,
         };
 
       case PixelArtAchievementType.LEVEL_5:
         return {
-          progress: Math.min(statistics.currentLevel, 5),
-          unlocked: statistics.currentLevel >= 5,
+          progress: Math.min(gameState.player.stats.level, 5),
+          unlocked: gameState.player.stats.level >= 5,
         };
 
       case PixelArtAchievementType.LEVEL_10:
         return {
-          progress: Math.min(statistics.currentLevel, 10),
-          unlocked: statistics.currentLevel >= 10,
+          progress: Math.min(gameState.player.stats.level, 10),
+          unlocked: gameState.player.stats.level >= 10,
+        };
+
+      case PixelArtAchievementType.FLOOR_3:
+        return {
+          progress: Math.min(gameState.mapLevel, 3),
+          unlocked: gameState.mapLevel >= 3,
+        };
+
+      case PixelArtAchievementType.FLOOR_5:
+        return {
+          progress: Math.min(gameState.mapLevel, 5),
+          unlocked: gameState.mapLevel >= 5,
+        };
+
+      case PixelArtAchievementType.FLOOR_10:
+        return {
+          progress: Math.min(gameState.mapLevel, 10),
+          unlocked: gameState.mapLevel >= 10,
         };
 
       case PixelArtAchievementType.PLAY_TIME_1_HOUR:
@@ -316,6 +409,18 @@ export class PixelArtAchievementsService {
         return {
           progress: Math.min(usedSlots, 10),
           unlocked: usedSlots >= 10,
+        };
+
+      case PixelArtAchievementType.TRADER:
+        return {
+          progress: Math.min(statistics.itemsSold ?? 0, 10),
+          unlocked: (statistics.itemsSold ?? 0) >= 10,
+        };
+
+      case PixelArtAchievementType.TREASURE_HUNTER:
+        return {
+          progress: Math.min(statistics.treasuresOpened ?? 0, 3),
+          unlocked: (statistics.treasuresOpened ?? 0) >= 3,
         };
 
       default:

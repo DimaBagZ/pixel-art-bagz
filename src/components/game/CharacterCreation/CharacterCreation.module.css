@@ -1,0 +1,167 @@
+/**
+ * Стили компонента создания персонажа
+ * Fallout терминальный стиль
+ */
+
+.characterCreationModal {
+  max-width: 800px !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.characterCreation {
+  padding: 30px;
+  width: 100%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: auto;
+}
+
+.characterCreation__title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.characterCreation__subtitle {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 16px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0 0 30px 0;
+}
+
+.characterCreation__classes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.characterCreation__class {
+  padding: 20px;
+  background: var(--color-background);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-family: "Share Tech Mono", monospace;
+}
+
+.characterCreation__class:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.characterCreation__class--selected {
+  border-color: var(--color-primary);
+  background: rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.characterCreation__className {
+  font-family: "Orbitron", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+}
+
+.characterCreation__classDescription {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+.characterCreation__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--color-border);
+}
+
+.characterCreation__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.characterCreation__statLabel {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.characterCreation__statValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.characterCreation__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+  position: relative;
+  z-index: 10;
+}
+
+.characterCreation__profileLink {
+  text-decoration: none;
+}
+
+.characterCreation__actionsRight {
+  display: flex;
+  gap: 15px;
+  margin-left: auto;
+}
+
+.characterCreationModal {
+  max-width: 800px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .characterCreation {
+    padding: 20px;
+  }
+
+  .characterCreation__classes {
+    grid-template-columns: 1fr;
+  }
+
+  .characterCreation__actions {
+    flex-direction: column;
+  }
+
+  .characterCreation__actionsRight {
+    width: 100%;
+    flex-direction: column;
+    margin-left: 0;
+  }
+
+  .characterCreation__actions button,
+  .characterCreation__profileLink {
+    width: 100%;
+  }
+}
+

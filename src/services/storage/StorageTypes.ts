@@ -32,6 +32,8 @@ export interface UserProfile {
   readonly createdAt: number;
   readonly updatedAt: number;
   readonly preferredDifficulty?: AIDifficulty; // Опционально для обратной совместимости
+  readonly staminaUpgrades?: number; // Количество улучшений стамины (каждое +10 к max)
+  readonly spentSkillPoints?: number; // Потраченные очки навыков
   readonly version: number;
 }
 

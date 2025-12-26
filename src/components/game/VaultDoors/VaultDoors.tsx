@@ -5,7 +5,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { VaultNut } from "./VaultNut";
 import { VaultDoorPanel } from "./VaultDoorPanel";
 import styles from "./VaultDoors.module.css";
@@ -15,6 +15,7 @@ export interface VaultDoorsProps {
   readonly hasSavedGame: boolean;
   readonly onOpen: () => void;
   readonly onClose?: () => void;
+  readonly hideNut?: boolean; // Скрыть кнопку когда модальное окно открыто
 }
 
 /**
@@ -25,6 +26,7 @@ export const VaultDoors: React.FC<VaultDoorsProps> = ({
   hasSavedGame,
   onOpen,
   onClose,
+  hideNut = false,
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -44,12 +46,12 @@ export const VaultDoors: React.FC<VaultDoorsProps> = ({
     }
   }, [isOpen]);
 
-  const handleNutClick = (): void => {
+  const handleNutClick = useCallback((): void => {
     if (!isOpen && !isAnimating) {
       setIsAnimating(true);
       onOpen();
     }
-  };
+  }, [isOpen, isAnimating, onOpen]);
 
   return (
     <div className={styles.vaultDoors}>
@@ -58,18 +60,7 @@ export const VaultDoors: React.FC<VaultDoorsProps> = ({
         side="left"
         isOpen={isOpen}
         isAnimating={isAnimating}
-      >
-        {/* Кнопка привязана к левой панели */}
-        {!isOpen && (
-          <div className={styles.vaultDoors__buttonContainer}>
-            <VaultNut
-              hasSavedGame={hasSavedGame}
-              onClick={handleNutClick}
-              isAnimating={isAnimating}
-            />
-          </div>
-        )}
-      </VaultDoorPanel>
+      />
 
       {/* Правая панель */}
       <VaultDoorPanel
@@ -78,8 +69,8 @@ export const VaultDoors: React.FC<VaultDoorsProps> = ({
         isAnimating={isAnimating}
       />
 
-      {/* Гайка посередине (когда ворота закрыты) */}
-      {!isOpen && (
+      {/* Гайка посередине (когда ворота закрыты и не скрыта) */}
+      {!isOpen && !hideNut && (
         <div className={styles.vaultDoors__centerNut}>
           <VaultNut
             hasSavedGame={hasSavedGame}

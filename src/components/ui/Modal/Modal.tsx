@@ -11,6 +11,7 @@ export interface ModalProps {
   readonly onClose: () => void;
   readonly children: React.ReactNode;
   readonly className?: string;
+  readonly closeOnOverlayClick?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   children,
   className = "",
+  closeOnOverlayClick = true,
 }) => {
   // Закрытие по Escape
   useEffect(() => {
@@ -46,7 +48,7 @@ export const Modal: React.FC<ModalProps> = ({
   }
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>): void => {
-    if (event.target === event.currentTarget) {
+    if (closeOnOverlayClick && event.target === event.currentTarget) {
       onClose();
     }
   };

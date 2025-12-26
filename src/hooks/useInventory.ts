@@ -3,7 +3,7 @@
  * Соблюдает принцип Single Responsibility
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { InventorySlot, GameItem } from "@/types/pixel-art-game.types";
 import { InventoryManager } from "@/domain/inventory/InventoryManager";
 import { InventoryValidator } from "@/domain/inventory/InventoryValidator";
@@ -27,8 +27,22 @@ export interface UseInventoryReturn {
  * Хук для управления инвентарем
  */
 export const useInventory = (options?: UseInventoryOptions): UseInventoryReturn => {
-  const initialInventory = options?.initialInventory || [];
-  const [inventory, setInventory] = useState<readonly InventorySlot[]>(initialInventory);
+  const externalInventory = options?.initialInventory || [];
+  const [inventory, setInventory] = useState<readonly InventorySlot[]>(externalInventory);
+  
+  // Храним ссылку на onInventoryChange, чтобы избежать пересоздания callbacks
+  const onInventoryChangeRef = useRef(options?.onInventoryChange);
+  onInventoryChangeRef.current = options?.onInventoryChange;
+  
+  // Синхронизируем локальное состояние с внешним инвентарём
+  useEffect(() => {
+    // Проверяем, изменился ли внешний инвентарь
+    const externalJson = JSON.stringify(externalInventory);
+    const localJson = JSON.stringify(inventory);
+    if (externalJson !== localJson) {
+      setInventory(externalInventory);
+    }
+  }, [externalInventory]);
 
   /**
    * Добавить предмет в инвентарь
@@ -40,21 +54,21 @@ export const useInventory = (options?: UseInventoryOptions): UseInventoryReturn 
         return false;
       }
 
-      const manager = new InventoryManager(inventory);
+      const manager = new InventoryManager([...inventory]);
       const success = manager.addItem(item);
 
       if (success) {
         const newInventory = manager.getSlots();
         setInventory(newInventory);
 
-        if (options?.onInventoryChange) {
-          options.onInventoryChange(newInventory);
+        if (onInventoryChangeRef.current) {
+          onInventoryChangeRef.current(newInventory);
         }
       }
 
       return success;
     },
-    [inventory, options]
+    [inventory]
   );
 
   /**
@@ -67,21 +81,21 @@ export const useInventory = (options?: UseInventoryOptions): UseInventoryReturn 
         return false;
       }
 
-      const manager = new InventoryManager(inventory);
+      const manager = new InventoryManager([...inventory]);
       const success = manager.removeItem(slotIndex);
 
       if (success) {
         const newInventory = manager.getSlots();
         setInventory(newInventory);
 
-        if (options?.onInventoryChange) {
-          options.onInventoryChange(newInventory);
+        if (onInventoryChangeRef.current) {
+          onInventoryChangeRef.current(newInventory);
         }
       }
 
       return success;
     },
-    [inventory, options]
+    [inventory]
   );
 
   /**
@@ -89,28 +103,28 @@ export const useInventory = (options?: UseInventoryOptions): UseInventoryReturn 
    */
   const removeItemById = useCallback(
     (itemId: string): boolean => {
-      const manager = new InventoryManager(inventory);
+      const manager = new InventoryManager([...inventory]);
       const success = manager.removeItemById(itemId);
 
       if (success) {
         const newInventory = manager.getSlots();
         setInventory(newInventory);
 
-        if (options?.onInventoryChange) {
-          options.onInventoryChange(newInventory);
+        if (onInventoryChangeRef.current) {
+          onInventoryChangeRef.current(newInventory);
         }
       }
 
       return success;
     },
-    [inventory, options]
+    [inventory]
   );
 
   /**
    * Получить количество занятых слотов
    */
   const getUsedSlotsCount = useCallback((): number => {
-    const manager = new InventoryManager(inventory);
+    const manager = new InventoryManager([...inventory]);
     return manager.getUsedSlotsCount();
   }, [inventory]);
 
@@ -118,7 +132,7 @@ export const useInventory = (options?: UseInventoryOptions): UseInventoryReturn 
    * Получить количество свободных слотов
    */
   const getFreeSlotsCount = useCallback((): number => {
-    const manager = new InventoryManager(inventory);
+    const manager = new InventoryManager([...inventory]);
     return manager.getFreeSlotsCount();
   }, [inventory]);
 
@@ -126,7 +140,7 @@ export const useInventory = (options?: UseInventoryOptions): UseInventoryReturn 
    * Проверить, полон ли инвентарь
    */
   const isFull = useCallback((): boolean => {
-    const manager = new InventoryManager(inventory);
+    const manager = new InventoryManager([...inventory]);
     return manager.isFull();
   }, [inventory]);
 

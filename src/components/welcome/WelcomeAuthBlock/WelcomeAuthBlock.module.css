@@ -20,9 +20,23 @@
   align-items: center;
   gap: 2rem;
   padding: 2rem;
-  background: var(--color-surface, #ffffff);
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcomeAuthBlock__content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(139, 69, 19, 0.05) 100%);
+  pointer-events: none;
 }
 
 .welcomeAuthBlock__avatar {
@@ -40,17 +54,22 @@
 }
 
 .welcomeAuthBlock__title {
+  font-family: "Orbitron", sans-serif;
   margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--color-text-primary, #1a1a1a);
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .welcomeAuthBlock__description {
+  font-family: "Share Tech Mono", monospace;
   margin: 0;
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--color-text-secondary, #666666);
+  color: var(--color-text-muted);
   max-width: 500px;
 }
 

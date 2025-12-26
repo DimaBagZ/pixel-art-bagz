@@ -1,6 +1,5 @@
 /**
- * Компонент мини-карты
- * Соблюдает принцип Single Responsibility
+ * Компонент мини-карты (DOOM-style)
  */
 
 "use client";
@@ -8,12 +7,37 @@
 import React, { useEffect, useRef } from "react";
 import type { GameState } from "@/types/pixel-art-game.types";
 import { ItemType, TileType } from "@/types/pixel-art-game.types";
+import { GAME_CONFIG } from "@/utils/pixel-art-constants";
 import styles from "./Minimap.module.css";
 
 export interface MinimapProps {
   readonly gameState: GameState;
   readonly size?: number;
 }
+
+// Цвета для мини-карты
+const MINIMAP_COLORS = {
+  floor: "#2d2d2d",
+  floorLight: "#3d3d3d",
+  wall: "#1a1a1a",
+  obstacle: "#4a3520",
+  door: "#8b4513",
+  doorOpen: "#3d3d3d",
+  doorWide: "#2a4a6a",
+  doorWideOpen: "#1a3a5a",
+  treasureDoor: "#6a5a2a",
+  treasureDoorOpen: "#4a4a2a",
+  terminal: "#00ff88",
+  exit: "#00ff41",
+  player: "#00ff41",
+  playerGlow: "rgba(0, 255, 65, 0.3)",
+  coin: "#ffd700",
+  potion: "#ff3333",
+  staminaPotion: "#00ff66",
+  rare: "#9966ff",
+  background: "#0a0a0a",
+  border: "#ffd700",
+};
 
 /**
  * Компонент мини-карты
@@ -31,7 +55,7 @@ export const Minimap: React.FC<MinimapProps> = ({
    */
   const renderMinimap = (ctx: CanvasRenderingContext2D): void => {
     // Очистка
-    ctx.fillStyle = "var(--color-background)";
+    ctx.fillStyle = MINIMAP_COLORS.background;
     ctx.fillRect(0, 0, size, size);
 
     // Рендеринг карты
@@ -47,65 +71,126 @@ export const Minimap: React.FC<MinimapProps> = ({
 
         switch (tile.type) {
           case TileType.FLOOR:
-            ctx.fillStyle = "var(--color-surface)";
+            ctx.fillStyle = MINIMAP_COLORS.floor;
+            break;
+          case TileType.FLOOR_LIGHT:
+            ctx.fillStyle = MINIMAP_COLORS.floorLight;
             break;
           case TileType.WALL:
-            ctx.fillStyle = "var(--color-surface-dark)";
+            ctx.fillStyle = MINIMAP_COLORS.wall;
             break;
           case TileType.OBSTACLE:
-            ctx.fillStyle = "var(--color-accent)";
+            ctx.fillStyle = MINIMAP_COLORS.obstacle;
             break;
+          case TileType.DOOR:
+            ctx.fillStyle = MINIMAP_COLORS.door;
+            break;
+          case TileType.DOOR_OPEN:
+            ctx.fillStyle = MINIMAP_COLORS.doorOpen;
+            break;
+          case TileType.DOOR_WIDE:
+            ctx.fillStyle = MINIMAP_COLORS.doorWide;
+            break;
+          case TileType.DOOR_WIDE_OPEN:
+            ctx.fillStyle = MINIMAP_COLORS.doorWideOpen;
+            break;
+          case TileType.TREASURE_DOOR:
+            ctx.fillStyle = MINIMAP_COLORS.treasureDoor;
+            break;
+          case TileType.TREASURE_DOOR_OPEN:
+            ctx.fillStyle = MINIMAP_COLORS.treasureDoorOpen;
+            break;
+          case TileType.TERMINAL:
+            ctx.fillStyle = MINIMAP_COLORS.terminal;
+            break;
+          case TileType.EXIT:
+            ctx.fillStyle = MINIMAP_COLORS.exit;
+            break;
+          default:
+            ctx.fillStyle = MINIMAP_COLORS.background;
         }
 
         ctx.fillRect(screenX, screenY, tileSize, tileSize);
+        
+        // Дополнительная отрисовка особых тайлов
+        if (tile.type === TileType.EXIT) {
+          ctx.fillStyle = "rgba(0, 255, 65, 0.5)";
+          ctx.beginPath();
+          ctx.arc(screenX + tileSize / 2, screenY + tileSize / 2, tileSize / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (tile.type === TileType.TERMINAL) {
+          ctx.fillStyle = "rgba(0, 255, 136, 0.5)";
+          ctx.beginPath();
+          ctx.arc(screenX + tileSize / 2, screenY + tileSize / 2, tileSize / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (tile.type === TileType.TREASURE_DOOR) {
+          ctx.fillStyle = "rgba(255, 170, 0, 0.5)";
+          ctx.beginPath();
+          ctx.arc(screenX + tileSize / 2, screenY + tileSize / 2, tileSize / 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     }
 
-    // Рендеринг несобранных предметов
+    // Рендеринг несобранных предметов (позиции в пикселях)
     for (const item of items) {
       if (item.collected) {
         continue;
       }
 
-      const screenX = item.position.x * tileSize;
-      const screenY = item.position.y * tileSize;
+      // Конвертируем пиксельную позицию в позицию на мини-карте
+      const screenX = (item.position.x / GAME_CONFIG.TILE_SIZE) * tileSize;
+      const screenY = (item.position.y / GAME_CONFIG.TILE_SIZE) * tileSize;
 
       ctx.fillStyle =
         item.type === ItemType.COIN
-          ? "var(--color-primary)"
+          ? MINIMAP_COLORS.coin
           : item.type === ItemType.POTION
-          ? "var(--color-error)"
-          : "var(--color-accent-light)";
+          ? MINIMAP_COLORS.potion
+          : item.type === ItemType.STAMINA_POTION
+          ? MINIMAP_COLORS.staminaPotion
+          : MINIMAP_COLORS.rare;
 
       ctx.beginPath();
-      ctx.arc(
-        screenX + tileSize / 2,
-        screenY + tileSize / 2,
-        tileSize / 3,
-        0,
-        Math.PI * 2
-      );
+      ctx.arc(screenX, screenY, tileSize / 3, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Рендеринг персонажа
-    const playerX = player.position.x * tileSize;
-    const playerY = player.position.y * tileSize;
+    // Рендеринг персонажа (позиция в пикселях)
+    const playerX = (player.position.x / GAME_CONFIG.TILE_SIZE) * tileSize;
+    const playerY = (player.position.y / GAME_CONFIG.TILE_SIZE) * tileSize;
 
-    ctx.fillStyle = "var(--color-success)";
+    // Свечение игрока
+    const gradient = ctx.createRadialGradient(playerX, playerY, 0, playerX, playerY, tileSize * 2);
+    gradient.addColorStop(0, MINIMAP_COLORS.playerGlow);
+    gradient.addColorStop(1, "transparent");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(playerX - tileSize * 2, playerY - tileSize * 2, tileSize * 4, tileSize * 4);
+
+    // Тело игрока
+    ctx.fillStyle = MINIMAP_COLORS.player;
     ctx.beginPath();
-    ctx.arc(
-      playerX + tileSize / 2,
-      playerY + tileSize / 2,
-      tileSize / 2,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(playerX, playerY, tileSize / 2, 0, Math.PI * 2);
     ctx.fill();
 
+    // Направление взгляда (угол)
+    const angle = (player.angle * Math.PI) / 180;
+    const dirLength = tileSize * 1.5;
+    ctx.strokeStyle = MINIMAP_COLORS.player;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(playerX, playerY);
+    ctx.lineTo(
+      playerX + Math.cos(angle) * dirLength,
+      playerY + Math.sin(angle) * dirLength
+    );
+    ctx.stroke();
+
     // Обводка персонажа
-    ctx.strokeStyle = "var(--color-text-light)";
+    ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(playerX, playerY, tileSize / 2, 0, Math.PI * 2);
     ctx.stroke();
   };
 

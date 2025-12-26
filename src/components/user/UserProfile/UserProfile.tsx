@@ -7,6 +7,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useGameState } from "@/hooks/useGameState";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { AvatarSelector } from "../UserAvatar/AvatarSelector";
 import { UserNameInput } from "./UserNameInput";
@@ -21,7 +22,9 @@ import styles from "./UserProfile.module.css";
  */
 export const UserProfile: React.FC = () => {
   const router = useRouter();
-  const { profile, updateName, updateAvatar, deleteAccount } = useUserProfile();
+  const { profile, updateName, updateAvatar, upgradeStamina, getAvailableSkillPoints, deleteAccount } = useUserProfile();
+  const { savedState } = useGameState();
+  const availableSkillPoints = getAvailableSkillPoints();
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -72,6 +75,64 @@ export const UserProfile: React.FC = () => {
         {/* Имя */}
         <div className={styles.userProfile__nameSection}>
           <UserNameInput currentName={profile.name} onSave={updateName} />
+        </div>
+
+        {/* Прокачка стамины */}
+        <div className={styles.userProfile__upgradeSection}>
+          <h3 className={styles.userProfile__upgradeTitle}>⚡ Улучшения персонажа</h3>
+          
+          {/* Очки навыков */}
+          <div className={styles.userProfile__skillPoints}>
+            <span className={styles.userProfile__skillPointsIcon}>✨</span>
+            <span className={styles.userProfile__skillPointsLabel}>Очки навыков:</span>
+            <span className={styles.userProfile__skillPointsValue}>{availableSkillPoints}</span>
+            {savedState && (
+              <span className={styles.userProfile__skillPointsInfo}>
+                (уровень {savedState.player.stats.level}, следующие очки на {Math.ceil((savedState.player.stats.level + 1) / 10) * 10} ур.)
+              </span>
+            )}
+          </div>
+
+          <div className={styles.userProfile__upgradeCard}>
+            <div className={styles.userProfile__upgradeInfo}>
+              <span className={styles.userProfile__upgradeIcon}>💚</span>
+              <div className={styles.userProfile__upgradeText}>
+                <span className={styles.userProfile__upgradeName}>Выносливость</span>
+                <span className={styles.userProfile__upgradeDesc}>
+                  +10 к максимальной стамине (стоит 10 очков)
+                </span>
+              </div>
+            </div>
+            <div className={styles.userProfile__upgradeStats}>
+              <div className={styles.userProfile__upgradeLevel}>
+                Улучшений: {profile.staminaUpgrades ?? 0} / 5
+              </div>
+              <div className={styles.userProfile__upgradeBonus}>
+                Бонус: +{(profile.staminaUpgrades ?? 0) * 10} стамины
+              </div>
+              <div className={styles.userProfile__upgradeBonus}>
+                Макс. стамина: {100 + (profile.staminaUpgrades ?? 0) * 10}
+              </div>
+            </div>
+            {(profile.staminaUpgrades ?? 0) < 5 && (
+              <Button
+                variant="primary"
+                onClick={() => {
+                  const success = upgradeStamina();
+                  if (!success) {
+                    alert("Недостаточно очков навыков! Нужно 10 очков.");
+                  }
+                }}
+                className={styles.userProfile__upgradeButton}
+                disabled={availableSkillPoints < 10}
+              >
+                Улучшить за 10 очков
+              </Button>
+            )}
+            {(profile.staminaUpgrades ?? 0) >= 5 && (
+              <div className={styles.userProfile__upgradeMax}>✅ Максимум</div>
+            )}
+          </div>
         </div>
 
         {/* Удаление аккаунта */}

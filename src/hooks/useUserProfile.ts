@@ -9,6 +9,7 @@ import type { AvatarId } from "@/domain/avatar/AvatarPreset";
 import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
 import { userStorageService } from "@/services/storage";
 import type { UserProfile } from "@/services/storage/StorageTypes";
+import { gameStateService } from "@/services/storage/GameStateService";
 
 export interface UseUserProfileReturn {
   readonly profile: UserProfile | null;
@@ -16,6 +17,8 @@ export interface UseUserProfileReturn {
   readonly createProfile: (data: { name: string; avatarId: AvatarId }) => void;
   readonly updateName: (name: string) => void;
   readonly updateAvatar: (avatarId: AvatarId) => void;
+  readonly upgradeStamina: () => boolean; // возвращает успех (true если куплено)
+  readonly getAvailableSkillPoints: () => number; // доступные очки навыков
   readonly resetProfile: () => void;
   readonly deleteAccount: () => void;
 }
@@ -69,6 +72,8 @@ export const useUserProfile = (): UseUserProfileReturn => {
   const createProfile = useCallback(
     (data: { name: string; avatarId: AvatarId }): void => {
       try {
+        // При создании нового профиля очищаем состояние игры
+        gameStateService.deleteGameState();
         const newProfile = userStorageService.createProfile({
           name: data.name,
           avatarId: data.avatarId,
@@ -119,6 +124,71 @@ export const useUserProfile = (): UseUserProfileReturn => {
     [profile]
   );
 
+  /**
+   * Получить доступные очки навыков
+   * За каждые 10 уровней персонажа начисляется 10 очков
+   */
+  const getAvailableSkillPoints = useCallback((): number => {
+    const gameState = gameStateService.loadGameState();
+    if (!gameState) return 0;
+
+    const playerLevel = gameState.player.stats.level;
+    const earnedPoints = Math.floor(playerLevel / 10) * 10; // 10 очков за каждые 10 уровней
+    const spentPoints = profile?.spentSkillPoints ?? 0;
+
+    return Math.max(0, earnedPoints - spentPoints);
+  }, [profile]);
+
+  /**
+   * Прокачка стамины за очки навыков
+   * Стоимость: 10 очков навыков за 1 улучшение
+   * Максимум: 5 улучшений (+50 стамины)
+   */
+  const upgradeStamina = useCallback((): boolean => {
+    if (!profile) return false;
+
+    const currentUpgrades = profile.staminaUpgrades ?? 0;
+    const spentPoints = profile.spentSkillPoints ?? 0;
+    const maxUpgrades = 5;
+    const costPerUpgrade = 10; // 10 очков навыков за улучшение
+
+    if (currentUpgrades >= maxUpgrades) {
+      return false; // Уже максимум
+    }
+
+    const availablePoints = getAvailableSkillPoints();
+    if (availablePoints < costPerUpgrade) {
+      return false; // Недостаточно очков навыков
+    }
+
+    // Обновляем профиль - тратим очки навыков
+    const updated = userStorageService.updateProfile({
+      ...profile,
+      staminaUpgrades: currentUpgrades + 1,
+      spentSkillPoints: spentPoints + costPerUpgrade,
+    });
+    setProfile(updated);
+
+    // Обновляем maxStamina в gameState
+    const gameState = gameStateService.loadGameState();
+    if (gameState) {
+      const newMaxStamina = 100 + (currentUpgrades + 1) * 10; // 110, 120, 130, 140, 150
+      const newGameState = {
+        ...gameState,
+        player: {
+          ...gameState.player,
+          stats: {
+            ...gameState.player.stats,
+            maxStamina: newMaxStamina,
+          },
+        },
+      };
+      gameStateService.saveGameState(newGameState);
+    }
+
+    return true;
+  }, [profile, getAvailableSkillPoints]);
+
   const resetProfile = useCallback((): void => {
     userStorageService.resetProfile();
     const newProfile = userStorageService.createProfile({
@@ -139,8 +209,9 @@ export const useUserProfile = (): UseUserProfileReturn => {
     createProfile,
     updateName,
     updateAvatar,
+    upgradeStamina,
+    getAvailableSkillPoints,
     resetProfile,
     deleteAccount,
   };
 };
-

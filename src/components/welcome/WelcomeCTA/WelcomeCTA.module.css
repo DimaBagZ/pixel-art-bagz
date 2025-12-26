@@ -4,12 +4,26 @@
  */
 
 .welcomeCTA {
-  background: var(--color-white);
-  border-radius: 16px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
   padding: 40px;
-  box-shadow: 0 4px 16px var(--color-shadow);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.3);
   margin-bottom: 40px;
   animation: fadeIn 0.6s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcomeCTA::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(139, 69, 19, 0.05) 100%);
+  pointer-events: none;
 }
 
 .welcomeCTA__container {
@@ -18,16 +32,21 @@
 }
 
 .welcomeCTA__title {
+  font-family: "Orbitron", sans-serif;
   font-size: 32px;
-  font-weight: 600;
-  color: var(--color-text);
+  font-weight: 700;
+  color: var(--color-primary);
   text-align: center;
   margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .welcomeCTA__subtitle {
+  font-family: "Share Tech Mono", monospace;
   font-size: 16px;
-  color: var(--color-text-light);
+  color: var(--color-text-muted);
   text-align: center;
   margin: 0 0 32px 0;
 }
@@ -45,25 +64,30 @@
 }
 
 .welcomeCTA__label {
+  font-family: "Share Tech Mono", monospace;
   font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .welcomeCTA__input {
   padding: 12px 16px;
   border: 2px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 16px;
   color: var(--color-text);
-  background: var(--color-white);
-  transition: border-color 0.2s ease;
-  font-family: inherit;
+  background: var(--color-background);
+  transition: all 0.3s ease;
+  font-family: "Share Tech Mono", monospace;
 }
 
 .welcomeCTA__input:focus {
   outline: none;
   border-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  background: rgba(26, 26, 26, 0.8);
 }
 
 .welcomeCTA__input::placeholder {
@@ -83,7 +107,8 @@
   gap: 16px;
   padding: 16px;
   background: var(--color-background);
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
 }
 
 .welcomeCTA__error {

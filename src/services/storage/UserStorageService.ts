@@ -9,6 +9,7 @@ import { STORAGE_KEYS, STORAGE_VERSION } from "./StorageTypes";
 import type { UserProfile, CreateProfileData, UserSettings } from "./StorageTypes";
 import { AvatarValidator } from "@/domain/avatar/AvatarValidator";
 import type { AvatarId } from "@/domain/avatar/AvatarPreset";
+import { gameStateService } from "./GameStateService";
 
 /**
  * Сервис для управления профилем пользователя
@@ -103,7 +104,7 @@ export class UserStorageService {
   }
 
   /**
-   * Удалить аккаунт пользователя (удаляет профиль, статистику, историю игр и достижения)
+   * Удалить аккаунт пользователя (удаляет профиль, статистику, историю игр, достижения и состояние игры)
    */
   deleteAccount(): void {
     // Удаляем профиль
@@ -116,6 +117,8 @@ export class UserStorageService {
     this.storage.remove(STORAGE_KEYS.ACHIEVEMENTS);
     // Удаляем настройки (опционально, если они привязаны к аккаунту)
     this.storage.remove(STORAGE_KEYS.SETTINGS);
+    // Удаляем состояние пиксель-арт игры
+    gameStateService.deleteGameState();
   }
 
   /**

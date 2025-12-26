@@ -10,14 +10,14 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 100;
+  z-index: 500; /* Выше canvas, но ниже хедера (1000) */
   font-family: "Share Tech Mono", monospace;
 }
 
-/* Верхняя панель */
+/* Верхняя панель (уровень, монеты, инвентарь) */
 .gameUI__topBar {
   position: absolute;
-  top: 20px;
+  top: 90px; /* Ниже хедера (70px + отступ 20px) */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -27,16 +27,14 @@
   background: rgba(26, 26, 26, 0.9);
   border: 2px solid var(--color-primary);
   border-radius: 8px;
-  box-shadow: 
-    0 0 20px rgba(255, 215, 0, 0.3),
-    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
 }
 
 /* Левая панель */
 .gameUI__leftPanel {
   position: absolute;
-  top: 20px;
+  top: 100px; /* Отступ от хедера */
   left: 20px;
   display: flex;
   flex-direction: column;
@@ -87,9 +85,7 @@
   height: 100%;
   background: var(--color-success);
   transition: width 0.3s ease, background-color 0.3s ease;
-  box-shadow: 
-    0 0 10px rgba(0, 255, 0, 0.5),
-    inset 0 0 5px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 .healthBar__value {
@@ -145,15 +141,9 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-stamina) 0%,
-    var(--color-warning) 100%
-  );
+  background: linear-gradient(90deg, var(--color-stamina) 0%, var(--color-warning) 100%);
   transition: width 0.3s ease;
-  box-shadow: 
-    0 0 10px rgba(255, 215, 0, 0.5),
-    inset 0 0 5px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 .staminaBar__value {
@@ -177,9 +167,7 @@
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid var(--color-primary);
   border-radius: 4px;
-  box-shadow: 
-    0 0 10px rgba(255, 215, 0, 0.3),
-    inset 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .levelDisplay__label {
@@ -205,9 +193,7 @@
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid var(--color-primary);
   border-radius: 4px;
-  box-shadow: 
-    0 0 10px rgba(255, 215, 0, 0.3),
-    inset 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .coinsDisplay__icon {
@@ -236,9 +222,7 @@
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid var(--color-primary);
   border-radius: 4px;
-  box-shadow: 
-    0 0 10px rgba(255, 215, 0, 0.3),
-    inset 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .inventoryCounter__icon {
@@ -264,6 +248,204 @@
   letter-spacing: 1px;
 }
 
+/* Бейдж уровня карты (этажа) */
+.mapLevelBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: linear-gradient(135deg, rgba(0, 100, 0, 0.8) 0%, rgba(0, 50, 0, 0.9) 100%);
+  border: 2px solid #00ff41;
+  border-radius: 4px;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: mapLevelGlow 2s ease-in-out infinite;
+}
+
+@keyframes mapLevelGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 255, 65, 0.6), inset 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.mapLevelBadge__label {
+  font-size: 10px;
+  color: #aaffaa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.mapLevelBadge__value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #00ff41;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+}
+
+/* Подсказка о выходе */
+.exitPrompt {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  animation: exitPromptBounce 0.5s ease-out;
+}
+
+@keyframes exitPromptBounce {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.exitPrompt__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 30px;
+  background: linear-gradient(135deg, rgba(0, 80, 0, 0.95) 0%, rgba(0, 40, 0, 0.98) 100%);
+  border: 3px solid #00ff41;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  animation: exitGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes exitGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(0, 255, 65, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.exitPrompt__text {
+  font-size: 14px;
+  color: #aaffaa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.exitPrompt__button {
+  padding: 12px 30px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: #001100;
+  background: linear-gradient(180deg, #00ff41 0%, #00cc33 100%);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 0 #008822, 0 0 20px rgba(0, 255, 65, 0.5);
+}
+
+.exitPrompt__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #008822, 0 0 30px rgba(0, 255, 65, 0.7);
+}
+
+.exitPrompt__button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #008822, 0 0 15px rgba(0, 255, 65, 0.4);
+}
+
+/* Подсказки взаимодействия */
+.interactionPrompt {
+  position: fixed;
+  bottom: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 600;
+  animation: promptFadeIn 0.3s ease-out;
+}
+
+@keyframes promptFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.interactionPrompt__content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 80, 50, 0.95) 0%,
+    rgba(0, 40, 30, 0.95) 100%
+  );
+  border: 2px solid #00ff88;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+}
+
+.interactionPrompt__contentTreasure {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(80, 50, 0, 0.95) 0%,
+    rgba(40, 25, 0, 0.95) 100%
+  );
+  border: 2px solid #ffa500;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(255, 165, 0, 0.4);
+}
+
+.interactionPrompt__icon {
+  font-size: 24px;
+  animation: iconPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+.interactionPrompt__text {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 14px;
+  color: #ccffee;
+  letter-spacing: 1px;
+}
+
+.keyHint {
+  display: inline-block;
+  padding: 3px 8px;
+  margin: 0 4px;
+  font-family: "Share Tech Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  background: linear-gradient(180deg, #ffdd00 0%, #cc9900 100%);
+  border-radius: 4px;
+  box-shadow: 0 2px 0 #886600;
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
   .gameUI__topBar {
@@ -281,5 +463,31 @@
   .inventoryCounter__value {
     font-size: 16px;
   }
-}
 
+  .exitPrompt {
+    bottom: 80px;
+  }
+
+  .exitPrompt__content {
+    padding: 15px 20px;
+  }
+
+  .exitPrompt__button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
+  .interactionPrompt {
+    bottom: 100px;
+  }
+
+  .interactionPrompt__content,
+  .interactionPrompt__contentTreasure {
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .interactionPrompt__text {
+    font-size: 12px;
+  }
+}

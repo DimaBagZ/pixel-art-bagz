@@ -12,6 +12,7 @@ import styles from "./PauseMenu.module.css";
 export interface PauseMenuProps {
   readonly isOpen: boolean;
   readonly onResume: () => void;
+  readonly onRestart?: () => void;
   readonly onSaveAndExit: () => void;
   readonly onExit: () => void;
 }
@@ -22,6 +23,7 @@ export interface PauseMenuProps {
 export const PauseMenu: React.FC<PauseMenuProps> = ({
   isOpen,
   onResume,
+  onRestart,
   onSaveAndExit,
   onExit,
 }) => {
@@ -49,6 +51,12 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({
     return null;
   }
 
+  const handleRestart = (): void => {
+    if (onRestart && window.confirm("Вы уверены? Весь прогресс будет потерян!")) {
+      onRestart();
+    }
+  };
+
   return (
     <div className={styles.pauseMenu}>
       <div className={styles.pauseMenu__overlay} onClick={onResume} />
@@ -58,6 +66,11 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({
           <Button variant="primary" onClick={onResume} className={styles.pauseMenu__button}>
             Продолжить
           </Button>
+          {onRestart && (
+            <Button variant="outline" onClick={handleRestart} className={styles.pauseMenu__button}>
+              🔄 Начать заново
+            </Button>
+          )}
           <Button variant="secondary" onClick={onSaveAndExit} className={styles.pauseMenu__button}>
             Сохранить и выйти
           </Button>
@@ -72,4 +85,3 @@ export const PauseMenu: React.FC<PauseMenuProps> = ({
     </div>
   );
 };
-
